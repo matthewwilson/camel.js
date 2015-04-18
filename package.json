@@ -1,0 +1,22 @@
+{
+  "name": "camel.js",
+  "version": "1.0.0",
+  "description": "A camel-like integration framework",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/matthewcodes/camel.js.git"
+  },
+  "keywords": [
+    "camel"
+  ],
+  "author": "Matthew Wilson",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/matthewcodes/camel.js/issues"
+  },
+  "homepage": "https://github.com/matthewcodes/camel.js"
+}
