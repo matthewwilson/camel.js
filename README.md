@@ -17,7 +17,8 @@ Routes are executed asynchronously, so adding a new route:
     route2 = new camel.route();
 
     route2.from('file://source2.txt')
-          .to('file://result2.txt');
+          .to('file://result2.txt')
+          .to('file://results2copy.txt');
 
     context.addRoute(route2);
 
