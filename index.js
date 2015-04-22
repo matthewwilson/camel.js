@@ -9,4 +9,11 @@ route.from('file://source.txt')
 
 context.addRoute(route);
 
+route2 = new camel.route();
+
+route2.from('file://source2.txt')
+     .to('file://result2.txt');
+
+context.addRoute(route2);
+
 context.start();
