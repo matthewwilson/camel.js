@@ -5,16 +5,13 @@ module.exports.context = function context() {
   this.routes = [];
 
   this.addRoute = function(route) {
-    console.log('Adding Route');
     this.routes.push(route);
   };
 
   this.start = function() {
 
     this.routes.forEach(function(route) {
-
       new routeProcessor().process(route);
-
     });
 
   };
