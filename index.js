@@ -1,4 +1,4 @@
-var routeProcessor = require('./processors/routeProcessor.js');
+var routeProcessor = require('./modules/processors/routeProcessor.js');
 
 module.exports.context = function context() {
 
