@@ -1,6 +1,6 @@
 {
   "name": "camel.js",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "A camel-like integration framework",
   "main": "index.js",
   "scripts": {
@@ -14,7 +14,7 @@
     "camel"
   ],
   "author": "Matthew Wilson",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/matthewcodes/camel.js/issues"
   },
