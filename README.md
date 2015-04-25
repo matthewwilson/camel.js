@@ -1,4 +1,4 @@
-# camel.js
+# camel.js [![npm version](https://badge.fury.io/js/camel.js.svg)](http://badge.fury.io/js/camel.js)
 A camel-like implementation in node.js!
 
 ###Installation
