@@ -1,16 +1,36 @@
 # camel.js
 A camel-like implementation in node.js!
 
-Currently a proof of concept app can be executed using:
+###Installation
 
-    node index.js
+Install using npm:
 
-This will execute the route:
+    npm install camel.js
+
+###Setup
+
+Require camel.js and create a new context:
+
+    var camel = require('camel.js');
+
+    context = new camel.context();
+
+Create a new route and add it to the context
+
+    route = new camel.route();
 
     route.from('file://source.txt')
          .to('file://result.txt');
 
-Which simply copies the source.txt contents to result.txt!
+    context.addRoute(route);
+
+Start the context
+
+    context.start();
+
+
+
+This will execute a route that simply copies the source.txt contents to result.txt!
 
 Routes are executed asynchronously, so adding a new route:
 
