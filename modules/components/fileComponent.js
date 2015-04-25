@@ -3,12 +3,20 @@ var fs = require('fs');
 module.exports = function() {
 
   this.isFileEndpoint = function(uri) {
+    if(uri) {
+      return (uri.indexOf('file://') === 0);
+    }
 
-    return (uri.indexOf('file://') > -1);
+    return false;
+
   };
 
   this.stripUriScheme = function(uri) {
-    return uri.replace('file://','');
+    if(uri.indexOf('file://') === 0) {
+      return uri.replace('file://','');
+    }
+
+    return uri;
   };
 
   this.from = function(uri, route,  callback) {
