@@ -1,5 +1,6 @@
-# camel.js [![npm version](https://badge.fury.io/js/camel.js.svg)](http://badge.fury.io/js/camel.js) [![Build Status](https://travis-ci.org/matthewcodes/camel.js.svg?branch=master)](https://travis-ci.org/matthewcodes/camel.js)
-A camel-like implementation in node.js!
+# camel.js
+[![npm version](https://badge.fury.io/js/camel.js.svg)](http://badge.fury.io/js/camel.js)
+[![Build Status](https://travis-ci.org/matthewcodes/camel.js.svg?branch=master)](https://travis-ci.org/matthewcodes/camel.js)
 
 ###Installation
 
