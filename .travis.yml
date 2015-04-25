@@ -1,1 +1,6 @@
 language: node_js
+deploy:
+  provider: npm
+  email: mwilson@mwil.so
+  api_key:
+    secure: Z96oWkwwyJTF0bWnIWw6rFZlUqvjumcHmiHcZL8PZpj03QHemH67+mt7kdWoSRRU0JkKYfZ9h3dou4eW44xAjCqV43QumY90jYBVL4pVq3ui+hXwW72uJlyFr5pMLLnQWppBFRGHUY5b/4rT4o/2va4ieHjQR+Uw5VpCApUfSYk=
