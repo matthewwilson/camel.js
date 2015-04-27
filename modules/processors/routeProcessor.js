@@ -2,8 +2,13 @@ var fileComponent = require('../components/fileComponent.js');
 
 module.exports = function routeProcessor() {
 
-  var processFunction = function(route) {
-    var file = new fileComponent();
+  var file = new fileComponent();
+
+  var processFunction = function(err, route) {
+
+    if(err) {
+      throw err;
+    }
 
     var currentEndpoint = route.getNextEndpoint();
 
@@ -13,15 +18,11 @@ module.exports = function routeProcessor() {
 
         if(!route.hasStarted) {
 
-          console.log('processing from');
-
           route.hasStarted = true;
 
           file.from(currentEndpoint, route, processFunction);
 
         } else {
-
-          console.log('processing to');
 
           file.to(currentEndpoint, route, processFunction);
 
@@ -33,7 +34,7 @@ module.exports = function routeProcessor() {
   };
 
   this.process = function(route) {
-    processFunction(route);
+    processFunction(undefined, route);
   };
 
 };

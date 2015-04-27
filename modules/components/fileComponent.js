@@ -23,18 +23,22 @@ module.exports = function() {
 
     var fileName = this.stripUriScheme(uri);
 
-    fs.readFile(fileName, function (err, data) {
+    if(!fileName) {
+      callback(new Error('No fileName found in endpoint: '+uri), route);
+    } else {
 
-      if(err) throw err;
+      fs.readFile(fileName, function (err, data) {
 
-      route.body = data;
+        if(err) {
+          callback(err, route);
+        } else {
+          route.body = data;
+          callback(undefined, route);
+        }
 
-      console.log(route.body);
+      });
 
-      callback(route);
-
-    });
-
+    }
   };
 
   this.to = function(uri, route, callback) {
@@ -42,11 +46,11 @@ module.exports = function() {
     var fileName = this.stripUriScheme(uri);
 
     fs.writeFile(fileName, route.body, function(err) {
-        if(err) {
-            return console.log(err);
-        }
-
-        callback(route);
+      if(err) {
+        callback(err, route);
+      } else {
+        callback(undefined, route);
+      }
     });
 
   };
