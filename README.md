@@ -45,6 +45,14 @@ Routes are executed asynchronously, so adding a new route:
 
 Will happen in parallel with the other routes!
 
+##Camel.js Development
+
+###Running tests
+
+Tests are written using mocha and chai, you can run them with the command:
+
+    npm test
+
 ###Releasing a new version
 Run the following commands:
 
