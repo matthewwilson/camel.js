@@ -44,3 +44,9 @@ Routes are executed asynchronously, so adding a new route:
     context.addRoute(route2);
 
 Will happen in parallel with the other routes!
+
+###Releasing a new version
+Run the following commands:
+
+    npm version patch -m "Upgrading to %s ..."
+    git push --tags

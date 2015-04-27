@@ -1,11 +1,11 @@
 var should = require('chai').should();
-var fileComponent = require('../modules/components/fileComponent.js');
-var camel = require('../index.js');
+var fileComponent = require('../../modules/components/fileComponent.js');
+var camel = require('../../index.js');
 var fs = require('fs');
 
 
 
-describe('#from', function() {
+describe('#fileComponent.from', function() {
 
   it('reads a file, puts the contents of the file in the body and performs the callback', function() {
 
@@ -53,7 +53,7 @@ describe('#from', function() {
 
       (route.body === undefined).should.be.true;
       route.getNextEndpoint().should.equal('file://destination.txt');
-      
+
     });
 
     fs.readFile = originalReadFile;
