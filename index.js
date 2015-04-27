@@ -11,7 +11,7 @@ module.exports.context = function context() {
   this.start = function() {
 
     this.routes.forEach(function(route) {
-      new routeProcessor().process(route);
+      routeProcessor.process(route);
     });
 
   };
