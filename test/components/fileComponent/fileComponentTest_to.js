@@ -20,12 +20,11 @@ describe('#fileComponent.to', function() {
       callback(undefined);
     };
 
-    var file = new fileComponent();
     var route = new camel.route();
 
     route.body = new Buffer('Here is the content');
 
-    file.to("file://destination.txt", route, function (err, route) {
+    fileComponent.to("file://destination.txt", route, function (err, route) {
 
       (err === undefined).should.be.true;
 
@@ -39,10 +38,9 @@ describe('#fileComponent.to', function() {
 
   it('throws an error if the body is undefined', function() {
 
-    var file = new fileComponent();
     var route = new camel.route();
 
-    file.to("file://destination.txt", route, function (err, route) {
+    fileComponent.to("file://destination.txt", route, function (err, route) {
 
       err.should.not.be.undefined;
       err.message.should.equal('The body cannot be empty when writing to file');
@@ -65,12 +63,11 @@ describe('#fileComponent.to', function() {
       callback(new Error('Unable to write to file'));
     };
 
-    var file = new fileComponent();
     var route = new camel.route();
 
     route.body = new Buffer('Here is the content');
 
-    file.to("file://destination.txt", route, function (err, route) {
+    fileComponent.to("file://destination.txt", route, function (err, route) {
 
       err.should.not.be.undefined;
       err.message.should.equal('Unable to write to file');
@@ -85,13 +82,12 @@ describe('#fileComponent.to', function() {
 
   it('returns an error if the filename is not found', function() {
 
-    var file = new fileComponent();
     var route = new camel.route();
     route.to('file://destination.txt');
 
     route.body = new Buffer("Hello World");
 
-    file.to("file://", route, function (err, route) {
+    fileComponent.to("file://", route, function (err, route) {
       err.should.not.be.undefined;
       err.message.should.equal('No fileName found in endpoint: file://');
 

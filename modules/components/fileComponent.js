@@ -1,64 +1,64 @@
 var fs = require('fs');
 
-module.exports = function() {
+var isFileEndpoint = function(uri) {
+  if(uri) {
+    return (uri.indexOf('file://') === 0);
+  }
 
-  this.isFileEndpoint = function(uri) {
-    if(uri) {
-      return (uri.indexOf('file://') === 0);
-    }
+  return false;
 
-    return false;
+};
 
-  };
+exports.isFileEndpoint = isFileEndpoint;
 
-  this.stripUriScheme = function(uri) {
-    if(uri.indexOf('file://') === 0) {
-      return uri.replace('file://','');
-    }
+var stripUriScheme = function(uri) {
+  if(uri.indexOf('file://') === 0) {
+    return uri.replace('file://','');
+  }
 
-    return uri;
-  };
+  return uri;
+};
 
-  this.from = function(uri, route,  callback) {
+exports.stripUriScheme = stripUriScheme;
 
-    var fileName = this.stripUriScheme(uri);
+exports.from = function(uri, route,  callback) {
 
-    if(!fileName) {
-      callback(new Error('No fileName found in endpoint: '+uri), route);
-    } else {
+  var fileName = stripUriScheme(uri);
 
-      fs.readFile(fileName, function (err, data) {
+  if(!fileName) {
+    callback(new Error('No fileName found in endpoint: '+uri), route);
+  } else {
 
-        if(err) {
-          callback(err, route);
-        } else {
-          route.body = data;
-          callback(undefined, route);
-        }
+    fs.readFile(fileName, function (err, data) {
 
-      });
+      if(err) {
+        callback(err, route);
+      } else {
+        route.body = data;
+        callback(undefined, route);
+      }
 
-    }
-  };
+    });
 
-  this.to = function(uri, route, callback) {
+  }
+};
 
-    var fileName = this.stripUriScheme(uri);
+exports.to = function(uri, route, callback) {
 
-    if(!fileName) {
-      callback(new Error('No fileName found in endpoint: '+uri), route);
-    } else if(route.body === undefined) {
-      callback(new Error("The body cannot be empty when writing to file"), route);
-    } else {
+  var fileName = stripUriScheme(uri);
 
-      fs.writeFile(fileName, route.body, function(err) {
-        if(err) {
-          callback(err, route);
-        } else {
-          callback(undefined, route);
-        }
-      });
-    }
-  };
+  if(!fileName) {
+    callback(new Error('No fileName found in endpoint: '+uri), route);
+  } else if(route.body === undefined) {
+    callback(new Error("The body cannot be empty when writing to file"), route);
+  } else {
 
+    fs.writeFile(fileName, route.body, function(err) {
+      if(err) {
+        callback(err, route);
+      } else {
+        callback(undefined, route);
+      }
+    });
+  }
 };

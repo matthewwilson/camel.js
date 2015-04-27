@@ -1,40 +1,34 @@
 var fileComponent = require('../components/fileComponent.js');
 
-module.exports = function routeProcessor() {
+var processFunction = function(err, route) {
 
-  var file = new fileComponent();
+  if(err) {
+    throw err;
+  }
 
-  var processFunction = function(err, route) {
+  var currentEndpoint = route.getNextEndpoint();
 
-    if(err) {
-      throw err;
-    }
+  if(currentEndpoint !== undefined) {
 
-    var currentEndpoint = route.getNextEndpoint();
+    if(fileComponent.isFileEndpoint(currentEndpoint)) {
 
-    if(currentEndpoint !== undefined) {
+      if(!route.hasStarted) {
 
-      if(file.isFileEndpoint(currentEndpoint)) {
+        route.hasStarted = true;
 
-        if(!route.hasStarted) {
+        fileComponent.from(currentEndpoint, route, processFunction);
 
-          route.hasStarted = true;
+      } else {
 
-          file.from(currentEndpoint, route, processFunction);
-
-        } else {
-
-          file.to(currentEndpoint, route, processFunction);
-
-        }
+        fileComponent.to(currentEndpoint, route, processFunction);
 
       }
+
     }
+  }
 
-  };
+};
 
-  this.process = function(route) {
-    processFunction(undefined, route);
-  };
-
+exports.process = function (route) {
+  processFunction(undefined, route);
 };

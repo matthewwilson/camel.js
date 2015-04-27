@@ -17,11 +17,10 @@ describe('#fileComponent.from', function() {
       callback(undefined, new Buffer('Heres the body text laaad!'));
     };
 
-    var file = new fileComponent();
     var route = new camel.route();
     route.to('file://destination.txt');
 
-    file.from("file://source.txt", route, function (err, route) {
+    fileComponent.from("file://source.txt", route, function (err, route) {
 
       (err === undefined).should.be.true;
 
@@ -43,11 +42,10 @@ describe('#fileComponent.from', function() {
       callback(undefined, undefined);
     };
 
-    var file = new fileComponent();
     var route = new camel.route();
     route.to('file://destination.txt');
 
-    file.from("file://source.txt", route, function (err, route) {
+    fileComponent.from("file://source.txt", route, function (err, route) {
 
       (err === undefined).should.be.true;
 
@@ -68,11 +66,10 @@ describe('#fileComponent.from', function() {
       callback(new Error("File not found"), undefined);
     };
 
-    var file = new fileComponent();
     var route = new camel.route();
     route.to('file://destination.txt');
 
-    file.from("file://source.txt", route, function (err, route) {
+    fileComponent.from("file://source.txt", route, function (err, route) {
       err.should.not.be.undefined;
       route.should.not.be.undefined;
     });
@@ -83,11 +80,10 @@ describe('#fileComponent.from', function() {
 
   it('returns an error if the filename is not found', function() {
 
-    var file = new fileComponent();
     var route = new camel.route();
     route.to('file://destination.txt');
 
-    file.from("file://", route, function (err, route) {
+    fileComponent.from("file://", route, function (err, route) {
       err.should.not.be.undefined;
       err.message.should.equal('No fileName found in endpoint: file://');
 
