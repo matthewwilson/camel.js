@@ -1,6 +1,6 @@
 {
   "name": "camel.js",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "A camel-like integration framework",
   "main": "index.js",
   "scripts": {
