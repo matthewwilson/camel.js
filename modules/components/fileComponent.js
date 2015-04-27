@@ -45,14 +45,20 @@ module.exports = function() {
 
     var fileName = this.stripUriScheme(uri);
 
-    fs.writeFile(fileName, route.body, function(err) {
-      if(err) {
-        callback(err, route);
-      } else {
-        callback(undefined, route);
-      }
-    });
+    if(!fileName) {
+      callback(new Error('No fileName found in endpoint: '+uri), route);
+    } else if(route.body === undefined) {
+      callback(new Error("The body cannot be empty when writing to file"), route);
+    } else {
 
+      fs.writeFile(fileName, route.body, function(err) {
+        if(err) {
+          callback(err, route);
+        } else {
+          callback(undefined, route);
+        }
+      });
+    }
   };
 
 };
