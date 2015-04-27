@@ -1,5 +1,5 @@
 var should = require('chai').should(),
-fileComponent = require('../../modules/components/fileComponent.js'),
+fileComponent = require('../../../modules/components/fileComponent.js'),
 file = new fileComponent(),
 stripUriScheme = file.stripUriScheme;
 

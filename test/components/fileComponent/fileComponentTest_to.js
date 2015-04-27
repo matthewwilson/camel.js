@@ -1,6 +1,6 @@
 var should = require('chai').should();
-var fileComponent = require('../../modules/components/fileComponent.js');
-var camel = require('../../index.js');
+var fileComponent = require('../../../modules/components/fileComponent.js');
+var camel = require('../../../index.js');
 var fs = require('fs');
 
 
