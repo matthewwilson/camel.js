@@ -1,6 +1,7 @@
 # camel.js
 [![npm version](https://badge.fury.io/js/camel.js.svg)](http://badge.fury.io/js/camel.js)
 [![Build Status](https://travis-ci.org/matthewcodes/camel.js.svg?branch=master)](https://travis-ci.org/matthewcodes/camel.js)
+
 [![NPM](https://nodei.co/npm/camel.js.png)](https://nodei.co/npm/camel.js/)
 
 ###Installation
