@@ -16,6 +16,8 @@ describe('routeProcessor', function(){
 
         route.body = new Buffer('hello world');
 
+        route.hasStarted.should.equal(true);
+
         callback(undefined, route);
 
       };
@@ -25,6 +27,8 @@ describe('routeProcessor', function(){
         endpoint.should.equal('file://destination.txt');
 
         route.body.toString().should.equal('hello world');
+
+        route.hasStarted.should.equal(true);
 
         callback(undefined, route);
 
@@ -51,6 +55,8 @@ describe('routeProcessor', function(){
 
         route.body = new Buffer('hello world');
 
+        route.hasStarted.should.equal(true);
+
         callback(undefined, route);
 
       };
@@ -62,6 +68,8 @@ describe('routeProcessor', function(){
         endpoint.should.equal(expectedEndpointNames.shift());
 
         route.body.toString().should.equal('hello world');
+
+        route.hasStarted.should.equal(true);
 
         callback(undefined, route);
 
@@ -90,6 +98,8 @@ describe('routeProcessor', function(){
       fileComponent.from = function (endpoint, route, callback) {
 
         endpoint.should.equal('file://source.txt');
+
+        route.hasStarted.should.equal(true);
 
         callback(error, route);
 
@@ -124,6 +134,8 @@ describe('routeProcessor', function(){
 
         route.body = new Buffer("Body loaded from file");
 
+        route.hasStarted.should.equal(true);
+
         callback(null, route);
 
       };
@@ -131,6 +143,8 @@ describe('routeProcessor', function(){
       var expectedEndpointNames = ['file://destination.txt', 'file://destination2.txt'];
 
       fileComponent.to = function (endpoint, route, callback) {
+
+        route.hasStarted.should.equal(true);
 
         var expectedEndpointName = expectedEndpointNames.shift();
 
@@ -159,6 +173,18 @@ describe('routeProcessor', function(){
       expectedEndpointNames.length.should.equal(0);
 
       fileComponent = originalFileComponent;
+
+    });
+
+    it('An unsupported endpoint causes an error to be thrown', function() {
+
+      var route = new camel.route();
+      route.from('unsupported://source.txt')
+           .to('file://destination.txt')
+           .to('file://destination2.txt')
+           .to('file://destination3.txt');
+
+      (function(){routeProcessor.process(route);}).should.throw('Endpoint unsupported://source.txt is not supported');
 
     });
 

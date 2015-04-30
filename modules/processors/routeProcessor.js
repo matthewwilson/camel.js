@@ -24,6 +24,8 @@ var processFunction = function(err, route) {
 
       }
 
+    } else {
+      throw new Error("Endpoint "+currentEndpoint+" is not supported");
     }
   }
 
