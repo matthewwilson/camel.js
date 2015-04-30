@@ -7,9 +7,17 @@ var fs = require('fs');
 
 exports.describe = function() {
 
-  it('writes the contents of the body, to the specified filename in the endpoint', function() {
+  var originalWriteFile;
 
-    var originalWriteFile = fs.writeFile;
+  beforeEach(function(){
+    originalWriteFile = fs.writeFile;
+  });
+
+  afterEach(function(){
+    fs.writeFile = originalWriteFile;
+  });
+
+  it('writes the contents of the body, to the specified filename in the endpoint', function() {
 
     fs.writeFile = function (fileName, body, callback) {
       fileName.should.be.a('string');
@@ -32,8 +40,6 @@ exports.describe = function() {
       (route.getNextEndpoint() === undefined).should.be.true;
     });
 
-    fs.writeFile = originalWriteFile;
-
   });
 
   it('throws an error if the body is undefined', function() {
@@ -51,8 +57,6 @@ exports.describe = function() {
   });
 
   it('calls the callback with an error if unable to write to file', function() {
-
-    var originalWriteFile = fs.writeFile;
 
     fs.writeFile = function (fileName, body, callback) {
       fileName.should.be.a('string');
@@ -75,8 +79,6 @@ exports.describe = function() {
       route.body.toString().should.equal('Here is the content');
       (route.getNextEndpoint() === undefined).should.be.true;
     });
-
-    fs.writeFile = originalWriteFile;
 
   });
 

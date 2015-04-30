@@ -6,9 +6,17 @@ var routeProcessor = require('../../../modules/processors/routeProcessor.js');
 describe('routeProcessor', function(){
   describe('#process', function() {
 
-    it('A route with 2 endpoints is successfully processed', function() {
+    var originalFileComponent;
 
-      var originalFileComponent = fileComponent;
+    beforeEach(function(){
+      originalFileComponent = fileComponent;
+    });
+
+    afterEach(function(){
+      fileComponent = originalFileComponent;
+    });
+
+    it('A route with 2 endpoints is successfully processed', function() {
 
       fileComponent.from = function (endpoint, route, callback) {
 
@@ -40,14 +48,9 @@ describe('routeProcessor', function(){
 
       routeProcessor.process(route);
 
-
-      fileComponent = originalFileComponent;
-
     });
 
     it('A route with 4 endpoints is successfully processed', function() {
-
-      var originalFileComponent = fileComponent;
 
       fileComponent.from = function (endpoint, route, callback) {
 
@@ -85,14 +88,10 @@ describe('routeProcessor', function(){
 
       expectedEndpointNames.length.should.equal(0);
 
-
-      fileComponent = originalFileComponent;
-
     });
 
     it('A route with 4 endpoints fails to read the file, the other endpoints are not processed', function() {
 
-      var originalFileComponent = fileComponent;
       var error = new Error('File not found or something');
 
       fileComponent.from = function (endpoint, route, callback) {
@@ -119,13 +118,10 @@ describe('routeProcessor', function(){
 
       (function(){routeProcessor.process(route);}).should.throw(error);
 
-      fileComponent = originalFileComponent;
-
     });
 
     it('A route with 4 endpoints fails to write a file, the remaining endpoints are not processed', function() {
 
-      var originalFileComponent = fileComponent;
       var error = new Error('Could not write to file for some reason');
 
       fileComponent.from = function (endpoint, route, callback) {
@@ -171,8 +167,6 @@ describe('routeProcessor', function(){
       (function(){routeProcessor.process(route);}).should.throw(error);
 
       expectedEndpointNames.length.should.equal(0);
-
-      fileComponent = originalFileComponent;
 
     });
 

@@ -1,6 +1,6 @@
 var routeProcessor = require('./modules/processors/routeProcessor.js');
 
-module.exports.context = function context() {
+exports.context = function context() {
 
   this.routes = [];
 
@@ -18,11 +18,12 @@ module.exports.context = function context() {
 
 };
 
-module.exports.route = function route() {
+exports.route = function route() {
 
   this.queue = [];
   this.hasStarted = false;
   this.body = undefined;
+  this.id = undefined;
 
   this.from = function(uri) {
     this.addToQueue(uri);

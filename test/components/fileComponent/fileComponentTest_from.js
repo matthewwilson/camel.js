@@ -6,9 +6,18 @@ var fs = require('fs');
 
 exports.describe = function() {
 
-  it('reads a file, puts the contents of the file in the body and performs the callback', function() {
+  var originalReadFile;
 
-    var originalReadFile = fs.readFile;
+  beforeEach(function(){
+    originalReadFile = fs.readFile;
+  });
+
+  afterEach(function(){
+    fs.readFile = originalReadFile;
+  });
+
+
+  it('reads a file, puts the contents of the file in the body and performs the callback', function() {
 
     fs.readFile = function (fileName, callback) {
       fileName.should.be.a('string');
@@ -27,13 +36,9 @@ exports.describe = function() {
       route.getNextEndpoint().should.equal('file://destination.txt');
     });
 
-    fs.readFile = originalReadFile;
-
   });
 
   it('reads a file, the file is empty, and performs the callback with an undefined body', function() {
-
-    var originalReadFile = fs.readFile;
 
     fs.readFile = function (fileName, callback) {
       fileName.should.be.a('string');
@@ -53,13 +58,9 @@ exports.describe = function() {
 
     });
 
-    fs.readFile = originalReadFile;
-
   });
 
   it('calls the callback function with an error if the file is not found', function() {
-
-    var originalReadFile = fs.readFile;
 
     fs.readFile = function (fileName, callback) {
       callback(new Error("File not found"), undefined);
@@ -72,8 +73,6 @@ exports.describe = function() {
       err.should.not.be.undefined;
       route.should.not.be.undefined;
     });
-
-    fs.readFile = originalReadFile;
 
   });
 
