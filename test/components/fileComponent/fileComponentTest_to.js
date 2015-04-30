@@ -5,7 +5,7 @@ var fs = require('fs');
 
 
 
-describe('#fileComponent.to', function() {
+exports.describe = function() {
 
   it('writes the contents of the body, to the specified filename in the endpoint', function() {
 
@@ -99,4 +99,4 @@ describe('#fileComponent.to', function() {
   });
 
 
-});
+};

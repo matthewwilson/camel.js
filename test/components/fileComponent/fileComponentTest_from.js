@@ -4,8 +4,7 @@ var camel = require('../../../index.js');
 var fs = require('fs');
 
 
-
-describe('#fileComponent.from', function() {
+exports.describe = function() {
 
   it('reads a file, puts the contents of the file in the body and performs the callback', function() {
 
@@ -95,4 +94,4 @@ describe('#fileComponent.from', function() {
   });
 
 
-});
+};

@@ -2,7 +2,7 @@ var should = require('chai').should();
 var fileComponent = require('../../../modules/components/fileComponent.js');
 
 
-describe('#fileComponent.stripUriScheme', function() {
+exports.describe = function() {
 
   it('removes file:// from start of endpoint', function() {
 
@@ -31,4 +31,4 @@ describe('#fileComponent.stripUriScheme', function() {
 
   });
 
-});
+};

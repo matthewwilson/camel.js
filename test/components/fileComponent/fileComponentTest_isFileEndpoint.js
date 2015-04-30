@@ -1,7 +1,7 @@
 var should = require('chai').should();
 var fileComponent = require('../../../modules/components/fileComponent.js');
 
-describe('#fileComponent.isFileEndpoint', function() {
+exports.describe = function() {
 
   it('returns true if an endpoint starts with file://', function() {
 
@@ -38,5 +38,4 @@ describe('#fileComponent.isFileEndpoint', function() {
     validFileEndpoint.should.equal(false);
 
   });
-
-});
+};
