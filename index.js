@@ -26,6 +26,15 @@ exports.route = function route() {
   this.id = undefined;
 
   this.from = function(uri) {
+
+    if(!uri) {
+      throw new Error('Please specify an endpoint uri');
+    } else if(this.queue.length > 0) {
+      throw new Error('From method should only be called at the start of a route.');
+    } else if(!new RegExp('[a-z]{1,}\:\/\/.{1,}').test(uri)) {
+      throw new Error('Endpoint uri is not in the correct format');
+    }
+
     this.addToQueue(uri);
     return this;
   };

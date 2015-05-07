@@ -2,9 +2,7 @@ var camel = require('../../index.js');
 var should = require('chai').should();
 var processor = require('../../modules/processors/routeProcessor.js');
 
-describe('camel', function(){
-
-  describe('context', function() {
+exports.describe = function() {
 
     describe('#addRoute', function() {
 
@@ -74,6 +72,4 @@ describe('camel', function(){
 
     });
 
-  });
-
-});
+};
