@@ -1,4 +1,5 @@
 var fs = require('fs');
+var p = require('path');
 
 var isFileEndpoint = function(uri) {
   if(uri) {
@@ -52,7 +53,7 @@ exports.from = function(uri, route,  callback) {
 
           files.forEach(function (file) {
 
-            readFile(file, route.clone(), callback);
+            readFile(p.join(path, file), route.clone(), callback);
 
           });
 

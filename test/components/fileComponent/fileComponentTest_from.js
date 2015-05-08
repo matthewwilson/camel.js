@@ -158,15 +158,15 @@ exports.describe = function() {
 
     };
 
-    var expectedFileNames = ['hello.txt', 'world.txt'];
+    var expectedFileNames = ['directoryPathHere/hello.txt', 'directoryPathHere/world.txt'];
 
     fs.readFile = function (fileName, callback) {
       fileName.should.be.a('string');
       fileName.should.equal(expectedFileNames.shift());
 
-      if(fileName == 'hello.txt') {
+      if(fileName == 'directoryPathHere/hello.txt') {
         callback(undefined, 'hello');
-      } else if(fileName == 'world.txt') {
+      } else if(fileName == 'directoryPathHere/world.txt') {
         callback(undefined, 'world');
       } else {
         should.fail('Failing test because filename '+fileName+' was not expected');
