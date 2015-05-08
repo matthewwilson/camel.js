@@ -1,4 +1,5 @@
 var routeProcessor = require('./modules/processors/routeProcessor.js');
+var clone = require('clone');
 
 exports.context = function context() {
 
@@ -59,6 +60,10 @@ exports.route = function route() {
 
   this.getNextEndpoint = function() {
     return this.queue.shift();
+  };
+
+  this.clone = function() {
+    return clone(this);
   };
 
 

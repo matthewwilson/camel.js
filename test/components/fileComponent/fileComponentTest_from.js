@@ -6,14 +6,26 @@ var fs = require('fs');
 
 exports.describe = function() {
 
-  var originalReadFile;
+  var originalfs;
 
   beforeEach(function(){
-    originalReadFile = fs.readFile;
+    originalfs = fs;
+
+    fs.stat = function (path, callback) {
+
+      var stats = {};
+      stats.isDirectory = function () {
+        return false;
+      };
+
+      callback(undefined, stats);
+
+    };
+
   });
 
   afterEach(function(){
-    fs.readFile = originalReadFile;
+    fs = originalfs;
   });
 
 
@@ -37,6 +49,8 @@ exports.describe = function() {
       route.getNextEndpoint().should.equal('file://destination.txt');
     });
 
+    route.queue.length.should.equal(0);
+
   });
 
   it('reads a file, the file is empty, and performs the callback with an undefined body', function() {
@@ -59,6 +73,8 @@ exports.describe = function() {
 
     });
 
+    route.queue.length.should.equal(0);
+
   });
 
   it('calls the callback function with an error if the file is not found', function() {
@@ -75,6 +91,8 @@ exports.describe = function() {
       route.should.not.be.undefined;
     });
 
+    route.queue.length.should.equal(1);
+
   });
 
   it('returns an error if the filename is not found', function() {
@@ -85,11 +103,101 @@ exports.describe = function() {
 
     fileComponent.from("file://", route, function (err, route) {
       err.should.not.be.undefined;
-      err.message.should.equal('No fileName found in endpoint: file://');
+      err.message.should.equal('No path found in endpoint: file://');
 
       route.should.not.be.undefined;
       route.getNextEndpoint().should.equal('file://destination.txt');
     });
+
+    route.queue.length.should.equal(0);
+
+  });
+
+  it('returns an error if the filename is not found', function() {
+
+    var route = new camel.route();
+    route.from("file://source.txt").to('file://destination.txt');
+    route.getNextEndpoint();
+
+    fileComponent.from("file://", route, function (err, route) {
+      err.should.not.be.undefined;
+      err.message.should.equal('No path found in endpoint: file://');
+
+      route.should.not.be.undefined;
+      route.getNextEndpoint().should.equal('file://destination.txt');
+    });
+
+    route.queue.length.should.equal(0);
+
+  });
+
+  it('processes all files in a directory if no filename is specified', function() {
+
+
+    fs.stat = function (path, callback) {
+
+      var stats = {};
+
+      if(path == 'directoryPathHere') {
+
+        stats.isDirectory = function () {
+          return true;
+        };
+
+      } else if(path == 'hello.txt') {
+
+        stats.isDirectory = function () {
+          return false;
+        };
+
+      } else {
+        should.fail('Failing test because path '+path+' was not expected');
+      }
+
+      callback(undefined, stats);
+
+    };
+
+    var expectedFileNames = ['hello.txt', 'world.txt'];
+
+    fs.readFile = function (fileName, callback) {
+      fileName.should.be.a('string');
+      fileName.should.equal(expectedFileNames.shift());
+
+      if(fileName == 'hello.txt') {
+        callback(undefined, 'hello');
+      } else if(fileName == 'world.txt') {
+        callback(undefined, 'world');
+      } else {
+        should.fail('Failing test because filename '+fileName+' was not expected');
+      }
+
+    };
+
+    fs.readdir = function (path, callback) {
+
+      if(path == 'directoryPathHere') {
+        callback(undefined, ['hello.txt', 'world.txt']);
+      } else {
+        should.fail('Failing test because path '+path+' was not expected');
+      }
+
+    };
+
+    var expectedBodies = ['hello', 'world'];
+
+    var camelroute = new camel.route();
+
+    camelroute.from('file://directoryPathHere').to('file://hello.txt');
+
+    fileComponent.from(camelroute.getNextEndpoint(), camelroute, function (err, route) {
+
+      expectedBodies.shift().should.equal(route.body);
+      route.getNextEndpoint().should.equal('file://hello.txt');
+
+    });
+
+    expectedBodies.length.should.equal(0);
 
   });
 

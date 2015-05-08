@@ -190,5 +190,32 @@ exports.describe = function() {
 
     });
 
+    describe('#clone', function() {
+
+      it('makes a copy of the route', function () {
+
+        var route = new camel.route();
+
+        route.from('file://hello.world').to('file://destination.txt');
+
+        var newRoute = route.clone();
+
+        route.getNextEndpoint().should.equal('file://hello.world');
+        route.hasStarted = true;
+        route.body = "hello world";
+        route.id = "some id";
+
+        route.queue.length.should.equal(1);
+
+        newRoute.queue.length.should.equal(2);
+        newRoute.hasStarted.should.be.false;
+        (newRoute.body === undefined).should.be.true;
+        (newRoute.id === undefined).should.be.true;
+
+
+      });
+
+    });
+
 
 };
