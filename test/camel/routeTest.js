@@ -70,4 +70,125 @@ exports.describe = function() {
 
     });
 
+    describe('#to', function() {
+
+      it('Stores the endpoint in the queue array and returns itself', function() {
+
+        var route = new camel.route();
+
+        var myself = route.from('file://source.txt')
+                          .to('file://destination.txt')
+                          .to('file://anotherDestination.txt');
+
+        route.queue.length.should.equal(3);
+
+        myself.should.equal(route);
+
+        route.getNextEndpoint().should.equal('file://source.txt');
+        route.getNextEndpoint().should.equal('file://destination.txt');
+        route.getNextEndpoint().should.equal('file://anotherDestination.txt');
+
+      });
+
+      it('Can only be called after the from function', function() {
+
+        var route = new camel.route();
+
+        (function(){
+          route.to('file://hello.txt')
+               .to('file://destination.sql')
+               .from('file://source.txt');
+        }).should.throw('To method should only be called after From.');
+
+
+      });
+
+      it('Throws an error if the endpoint is undefined', function() {
+
+        var route = new camel.route();
+
+        (function(){
+          route.to();
+        }).should.throw('Please specify an endpoint uri');
+
+      });
+
+      it('Throws an error if the endpoint is not in the right format', function() {
+
+        var route = new camel.route();
+
+        (function(){
+          route.from('file://destination.txt').to('hello world');
+        }).should.throw('Endpoint uri is not in the correct format');
+
+        route = new camel.route();
+
+        (function(){
+          route.from('file://destination.txt').to('HTTP://helloworld');
+        }).should.throw('Endpoint uri is not in the correct format');
+
+        route = new camel.route();
+
+        (function(){
+          route.from('file://destination.txt').to('file://');
+        }).should.throw('Endpoint uri is not in the correct format');
+
+        route = new camel.route();
+
+        (function(){
+          route.from('file://destination.txt').to('://');
+        }).should.throw('Endpoint uri is not in the correct format');
+
+        route = new camel.route();
+
+        (function(){
+          route.from('file://destination.txt').to('://source.txt');
+        }).should.throw('Endpoint uri is not in the correct format');
+
+      });
+
+    });
+
+    describe('#addToQueue', function() {
+
+      it('adds endpoints to the queue array', function() {
+
+        var route = new camel.route();
+
+        route.from('http://www.mwil.so').to('file://hello.txt');
+
+        route.queue.length.should.equal(2);
+
+        route.getNextEndpoint().should.equal('http://www.mwil.so');
+        route.getNextEndpoint().should.equal('file://hello.txt');
+
+        route.queue.length.should.equal(0);
+
+      });
+
+    });
+
+    describe('#getNextEndpoint', function() {
+
+      it('returns the next endpoint in the queue array and removes it from the queue', function() {
+
+        var route = new camel.route();
+
+        route.from('http://www.mwil.so').to('file://hello.txt');
+
+        route.queue.length.should.equal(2);
+
+        route.getNextEndpoint().should.equal('http://www.mwil.so');
+
+        route.queue.length.should.equal(1);
+
+        route.getNextEndpoint().should.equal('file://hello.txt');
+
+        route.queue.length.should.equal(0);
+
+      });
+
+    });
+
+
 };

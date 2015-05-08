@@ -85,7 +85,8 @@ exports.describe = function() {
   it('returns an error if the filename is not found', function() {
 
     var route = new camel.route();
-    route.to('file://destination.txt');
+    route.from("file://source.txt").to('file://destination.txt');
+    route.getNextEndpoint();
 
     route.body = new Buffer("Hello World");
 

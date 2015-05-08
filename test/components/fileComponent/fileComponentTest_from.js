@@ -26,9 +26,10 @@ exports.describe = function() {
     };
 
     var route = new camel.route();
-    route.to('file://destination.txt');
+    route.from("file://source.txt").to('file://destination.txt');
 
-    fileComponent.from("file://source.txt", route, function (err, route) {
+
+    fileComponent.from(route.getNextEndpoint(), route, function (err, route) {
 
       (err === undefined).should.be.true;
 
@@ -47,9 +48,9 @@ exports.describe = function() {
     };
 
     var route = new camel.route();
-    route.to('file://destination.txt');
+    route.from("file://source.txt").to('file://destination.txt');
 
-    fileComponent.from("file://source.txt", route, function (err, route) {
+    fileComponent.from(route.getNextEndpoint(), route, function (err, route) {
 
       (err === undefined).should.be.true;
 
@@ -67,9 +68,9 @@ exports.describe = function() {
     };
 
     var route = new camel.route();
-    route.to('file://destination.txt');
+    route.from('file://source.txt').to('file://destination.txt');
 
-    fileComponent.from("file://source.txt", route, function (err, route) {
+    fileComponent.from(route.getNextEndpoint(), route, function (err, route) {
       err.should.not.be.undefined;
       route.should.not.be.undefined;
     });
@@ -79,7 +80,8 @@ exports.describe = function() {
   it('returns an error if the filename is not found', function() {
 
     var route = new camel.route();
-    route.to('file://destination.txt');
+    route.from("file://source.txt").to('file://destination.txt');
+    route.getNextEndpoint();
 
     fileComponent.from("file://", route, function (err, route) {
       err.should.not.be.undefined;
@@ -89,8 +91,6 @@ exports.describe = function() {
       route.getNextEndpoint().should.equal('file://destination.txt');
     });
 
-
   });
-
 
 };
