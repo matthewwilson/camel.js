@@ -47,6 +47,22 @@ Routes are executed asynchronously, so adding a new route:
 
 Will happen in parallel with the other routes!
 
+##Supported Endpoints
+
+###File://
+
+The file endpoint can be used to read and write files.
+
+**Reading files**
+
+To read from a single file - `from('file://source.txt')`
+
+To read all files in a directory - `from('file://directoryNameHere')`
+
+**Writing files**
+
+To write to a file, replacing all contents with the routes body - `to('file://source.txt')`
+
 ##Camel.js Development
 
 ###Running tests
