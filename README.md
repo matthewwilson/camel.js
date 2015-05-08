@@ -49,7 +49,7 @@ Will happen in parallel with the other routes!
 
 ##Supported Endpoints
 
-###File://
+###file://
 
 The file endpoint can be used to read and write files.
 
