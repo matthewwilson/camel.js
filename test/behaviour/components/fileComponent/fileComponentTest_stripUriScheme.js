@@ -1,5 +1,5 @@
 var should = require('chai').should();
-var fileComponent = require('../../../modules/components/fileComponent.js');
+var fileComponent = require('../../../../modules/components/fileComponent.js');
 
 
 exports.describe = function() {

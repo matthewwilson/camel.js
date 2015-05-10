@@ -46,10 +46,7 @@ exports.from = function(uri, route, callback) {
     callback(new Error('No path found in endpoint: '+uri), route);
   } else {
 
-    var message = {};
-    message.headers = {};
-    message.headers.filePath = path;
-    route.message = message;
+    route.message.headers.filePath = path;
 
     fs.stat(path, function(err, stats) {
 
@@ -65,7 +62,7 @@ exports.from = function(uri, route, callback) {
               callback(err, route);
             } else {
               files.forEach(function (file) {
-                message.headers.filePath = file;
+                route.message.headers.filePath = file;
                 readFile(p.join(path, file), route.clone(), callback);
               });
             }

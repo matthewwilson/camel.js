@@ -1,7 +1,7 @@
 var should = require('chai').should();
-var fileComponent = require('../../../modules/components/fileComponent.js');
-var camel = require('../../../index.js');
-var routeProcessor = require('../../../modules/processors/routeProcessor.js');
+var fileComponent = require('../../../../modules/components/fileComponent.js');
+var camel = require('../../../../index.js');
+var routeProcessor = require('../../../../modules/processors/routeProcessor.js');
 
 describe('routeProcessor', function(){
   describe('#process', function() {
@@ -46,7 +46,9 @@ describe('routeProcessor', function(){
       route.from('file://source.txt')
            .to('file://destination.txt');
 
-      routeProcessor.process(route);
+      routeProcessor.process(route, function(err) {
+        (err === undefined).should.be.true;
+      });
 
     });
 
@@ -84,7 +86,9 @@ describe('routeProcessor', function(){
            .to('file://destination2.txt')
            .to('file://destination3.txt');
 
-      routeProcessor.process(route);
+      routeProcessor.process(route, function(err) {
+        (err === undefined).should.be.true;
+      });
 
       expectedEndpointNames.length.should.equal(0);
 
@@ -116,7 +120,9 @@ describe('routeProcessor', function(){
            .to('file://destination2.txt')
            .to('file://destination3.txt');
 
-      (function(){routeProcessor.process(route);}).should.throw(error);
+      routeProcessor.process(route, function(err) {
+        error.should.equal(err);
+      });
 
     });
 
@@ -164,7 +170,10 @@ describe('routeProcessor', function(){
            .to('file://destination2.txt')
            .to('file://destination3.txt');
 
-      (function(){routeProcessor.process(route);}).should.throw(error);
+
+       routeProcessor.process(route, function(err) {
+         error.should.equal(err);
+       });
 
       expectedEndpointNames.length.should.equal(0);
 

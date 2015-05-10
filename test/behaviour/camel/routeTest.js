@@ -1,4 +1,4 @@
-var camel = require('../../index.js');
+var camel = require('../../../index.js');
 var should = require('chai').should();
 
 exports.describe = function() {

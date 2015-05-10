@@ -1,20 +1,20 @@
 var should = require('chai').should();
-var fileComponent = require('../../../modules/components/fileComponent.js');
-var camel = require('../../../index.js');
+var fileComponent = require('../../../../modules/components/fileComponent.js');
+var camel = require('../../../../index.js');
 var fs = require('fs');
 
 
 
 exports.describe = function() {
 
-  var originalWriteFile;
+  var originalFs;
 
   beforeEach(function(){
-    originalWriteFile = fs.writeFile;
+    originalFs = fs;
   });
 
   afterEach(function(){
-    fs.writeFile = originalWriteFile;
+    fs = originalFs;
   });
 
   it('writes the contents of the body, to the specified filename in the endpoint', function() {
@@ -29,7 +29,6 @@ exports.describe = function() {
     };
 
     var route = new camel.route();
-    route.message = {};
     route.message.body = new Buffer('Here is the content');
 
     fileComponent.to("file://destination.txt", route, function (err, route) {
@@ -68,8 +67,6 @@ exports.describe = function() {
     };
 
     var route = new camel.route();
-
-    route.message = {};
     route.message.body = new Buffer('Here is the content');
 
     fileComponent.to("file://destination.txt", route, function (err, route) {
@@ -89,7 +86,6 @@ exports.describe = function() {
     route.from("file://source.txt").to('file://destination.txt');
     route.getNextEndpoint();
 
-    route.message = {};
     route.message.body = new Buffer("Hello World");
 
     fileComponent.to("file://", route, function (err, route) {

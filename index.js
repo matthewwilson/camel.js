@@ -1,4 +1,5 @@
 var routeProcessor = require('./modules/processors/routeProcessor.js');
+var message = require('./modules/message.js');
 var clone = require('clone');
 
 exports.context = function context() {
@@ -9,10 +10,10 @@ exports.context = function context() {
     this.routes.push(route);
   };
 
-  this.start = function() {
+  this.start = function(callback) {
 
     this.routes.forEach(function(route) {
-      routeProcessor.process(route);
+      routeProcessor.process(route, callback);
     });
 
   };
@@ -23,7 +24,7 @@ exports.route = function route() {
 
   this.queue = [];
   this.hasStarted = false;
-  this.message = undefined;
+  this.message = new message();
   this.id = undefined;
 
   this.from = function(uri) {

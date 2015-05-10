@@ -1,6 +1,6 @@
-var camel = require('../../index.js');
+var camel = require('../../../index.js');
 var should = require('chai').should();
-var processor = require('../../modules/processors/routeProcessor.js');
+var processor = require('../../../modules/processors/routeProcessor.js');
 
 exports.describe = function() {
 
