@@ -23,7 +23,7 @@ exports.route = function route() {
 
   this.queue = [];
   this.hasStarted = false;
-  this.body = undefined;
+  this.message = undefined;
   this.id = undefined;
 
   this.from = function(uri) {

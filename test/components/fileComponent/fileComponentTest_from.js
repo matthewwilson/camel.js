@@ -29,7 +29,7 @@ exports.describe = function() {
   });
 
 
-  it('reads a file, puts the contents of the file in the body and performs the callback', function() {
+  it('reads a file, puts the contents of the file in the message body and performs the callback', function() {
 
     fs.readFile = function (fileName, callback) {
       fileName.should.be.a('string');
@@ -45,7 +45,8 @@ exports.describe = function() {
 
       (err === undefined).should.be.true;
 
-      route.body.toString().should.equal('Heres the body text laaad!');
+      route.message.headers.filePath.should.equal('source.txt');
+      route.message.body.toString().should.equal('Heres the body text laaad!');
       route.getNextEndpoint().should.equal('file://destination.txt');
     });
 
@@ -68,6 +69,7 @@ exports.describe = function() {
 
       (err === undefined).should.be.true;
 
+      route.message.headers.filePath.should.equal('source.txt');
       (route.body === undefined).should.be.true;
       route.getNextEndpoint().should.equal('file://destination.txt');
 
@@ -89,6 +91,7 @@ exports.describe = function() {
     fileComponent.from(route.getNextEndpoint(), route, function (err, route) {
       err.should.not.be.undefined;
       route.should.not.be.undefined;
+      route.message.headers.filePath.should.equal('source.txt');
     });
 
     route.queue.length.should.equal(1);
@@ -113,17 +116,54 @@ exports.describe = function() {
 
   });
 
-  it('returns an error if the filename is not found', function() {
+  it('returns an error if unable to determine stats', function() {
+
+    fs.stat = function (path, callback) {
+      callback(new Error('Unable to get stats'), undefined);
+    };
+
 
     var route = new camel.route();
     route.from("file://source.txt").to('file://destination.txt');
-    route.getNextEndpoint();
 
-    fileComponent.from("file://", route, function (err, route) {
+    fileComponent.from(route.getNextEndpoint(), route, function (err, route) {
       err.should.not.be.undefined;
-      err.message.should.equal('No path found in endpoint: file://');
+      err.message.should.equal('Unable to get stats');
 
       route.should.not.be.undefined;
+      route.message.headers.filePath.should.equal('source.txt');
+      route.getNextEndpoint().should.equal('file://destination.txt');
+    });
+
+    route.queue.length.should.equal(0);
+
+  });
+
+  it('returns an error if unable to read from dir', function() {
+
+    fs.stat = function (path, callback) {
+      var stats = {};
+      stats.isDirectory = function () {
+        return true;
+      };
+
+      callback(undefined, stats);
+    };
+
+    fs.readdir = function (path, callback) {
+      callback(new Error('Unable to read from dir'), undefined);
+    };
+
+
+    var route = new camel.route();
+    route.from("file://source.txt").to('file://destination.txt');
+
+    fileComponent.from(route.getNextEndpoint(), route, function (err, route) {
+      err.should.not.be.undefined;
+      err.message.should.equal('Unable to read from dir');
+
+      route.should.not.be.undefined;
+      route.message.headers.filePath.should.equal('source.txt');
       route.getNextEndpoint().should.equal('file://destination.txt');
     });
 
@@ -171,7 +211,6 @@ exports.describe = function() {
       } else {
         should.fail('Failing test because filename '+fileName+' was not expected');
       }
-
     };
 
     fs.readdir = function (path, callback) {
@@ -185,6 +224,7 @@ exports.describe = function() {
     };
 
     var expectedBodies = ['hello', 'world'];
+    var expectedFilePathHeaders = ['hello.txt', 'world.txt'];
 
     var camelroute = new camel.route();
 
@@ -192,7 +232,8 @@ exports.describe = function() {
 
     fileComponent.from(camelroute.getNextEndpoint(), camelroute, function (err, route) {
 
-      expectedBodies.shift().should.equal(route.body);
+      route.message.headers.filePath.should.equal(expectedFilePathHeaders.shift());
+      route.message.body.should.equal(expectedBodies.shift());
       route.getNextEndpoint().should.equal('file://hello.txt');
 
     });

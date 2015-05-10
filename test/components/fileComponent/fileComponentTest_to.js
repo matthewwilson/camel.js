@@ -29,14 +29,14 @@ exports.describe = function() {
     };
 
     var route = new camel.route();
-
-    route.body = new Buffer('Here is the content');
+    route.message = {};
+    route.message.body = new Buffer('Here is the content');
 
     fileComponent.to("file://destination.txt", route, function (err, route) {
 
       (err === undefined).should.be.true;
 
-      route.body.toString().should.equal('Here is the content');
+      route.message.body.toString().should.equal('Here is the content');
       (route.getNextEndpoint() === undefined).should.be.true;
     });
 
@@ -69,14 +69,15 @@ exports.describe = function() {
 
     var route = new camel.route();
 
-    route.body = new Buffer('Here is the content');
+    route.message = {};
+    route.message.body = new Buffer('Here is the content');
 
     fileComponent.to("file://destination.txt", route, function (err, route) {
 
       err.should.not.be.undefined;
       err.message.should.equal('Unable to write to file');
 
-      route.body.toString().should.equal('Here is the content');
+      route.message.body.toString().should.equal('Here is the content');
       (route.getNextEndpoint() === undefined).should.be.true;
     });
 
@@ -88,7 +89,8 @@ exports.describe = function() {
     route.from("file://source.txt").to('file://destination.txt');
     route.getNextEndpoint();
 
-    route.body = new Buffer("Hello World");
+    route.message = {};
+    route.message.body = new Buffer("Hello World");
 
     fileComponent.to("file://", route, function (err, route) {
       err.should.not.be.undefined;

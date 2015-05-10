@@ -29,7 +29,7 @@ var readFile = function(path, route, callback) {
     if(err) {
       callback(err, route);
     } else {
-      route.body = data;
+      route.message.body = data;
       callback(undefined, route);
     }
 
@@ -37,7 +37,8 @@ var readFile = function(path, route, callback) {
 
 };
 
-exports.from = function(uri, route,  callback) {
+
+exports.from = function(uri, route, callback) {
 
   var path = stripUriScheme(uri);
 
@@ -45,24 +46,35 @@ exports.from = function(uri, route,  callback) {
     callback(new Error('No path found in endpoint: '+uri), route);
   } else {
 
+    var message = {};
+    message.headers = {};
+    message.headers.filePath = path;
+    route.message = message;
+
     fs.stat(path, function(err, stats) {
 
-      if(stats.isDirectory()) {
+      if(err) {
+        callback(err, route);
+      } else {
 
-        fs.readdir(path, function(err, files) {
+        if(stats.isDirectory()) {
 
-          files.forEach(function (file) {
+          fs.readdir(path, function(err, files) {
 
-            readFile(p.join(path, file), route.clone(), callback);
+            if(err) {
+              callback(err, route);
+            } else {
+              files.forEach(function (file) {
+                message.headers.filePath = file;
+                readFile(p.join(path, file), route.clone(), callback);
+              });
+            }
 
           });
 
-        });
-
-      } else {
-
-        readFile(path, route, callback);
-
+        } else {
+          readFile(path, route, callback);
+        }
       }
 
     });
@@ -76,11 +88,11 @@ exports.to = function(uri, route, callback) {
 
   if(!fileName) {
     callback(new Error('No fileName found in endpoint: '+uri), route);
-  } else if(route.body === undefined) {
+  } else if(route.message === undefined || route.message.body === undefined) {
     callback(new Error("The body cannot be empty when writing to file"), route);
   } else {
 
-    fs.writeFile(fileName, route.body, function(err) {
+    fs.writeFile(fileName, route.message.body, function(err) {
       if(err) {
         callback(err, route);
       } else {
