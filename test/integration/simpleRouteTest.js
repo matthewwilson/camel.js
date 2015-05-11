@@ -21,7 +21,26 @@ describe('Simple Route Test', function() {
     route.from('file://test/integration/source.txt').to('file://test/integration/destination.txt');
     context.addRoute(route);
 
-    context.start(done);
+    context.start(function(err) {
+
+      if(err) {
+        done(err);
+      }
+
+      fs.readFile('test/integration/destination.txt', function(err, data) {
+
+        if(err) {
+          done(err);
+        }
+
+        var content = data.toString();
+
+        content.should.equal('Hey there!');
+        done();
+
+      });
+
+    });
 
   });
 
