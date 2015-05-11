@@ -3,19 +3,7 @@ var fileComponent = require('../../../../modules/components/fileComponent.js');
 var camel = require('../../../../index.js');
 var fs = require('fs');
 
-
-
 exports.describe = function() {
-
-  var originalFs;
-
-  beforeEach(function(){
-    originalFs = fs;
-  });
-
-  afterEach(function(){
-    fs = originalFs;
-  });
 
   it('writes the contents of the body, to the specified filename in the endpoint', function() {
 

@@ -1,32 +1,10 @@
 var should = require('chai').should();
 var fileComponent = require('../../../../modules/components/fileComponent.js');
 var camel = require('../../../../index.js');
+var path = require('path');
 var fs = require('fs');
 
 exports.describe = function() {
-
-  var originalfs;
-
-  beforeEach(function(){
-    originalfs = fs;
-
-    fs.stat = function (path, callback) {
-
-      var stats = {};
-      stats.isDirectory = function () {
-        return false;
-      };
-
-      callback(undefined, stats);
-
-    };
-
-  });
-
-  afterEach(function(){
-    fs = originalfs;
-  });
-
 
   it('reads a file, puts the contents of the file in the message body and performs the callback', function() {
 
@@ -197,15 +175,15 @@ exports.describe = function() {
 
     };
 
-    var expectedFileNames = ['directoryPathHere/hello.txt', 'directoryPathHere/world.txt'];
+    var expectedFileNames = [path.join('directoryPathHere','hello.txt'), path.join('directoryPathHere','world.txt')];
 
     fs.readFile = function (fileName, callback) {
       fileName.should.be.a('string');
       fileName.should.equal(expectedFileNames.shift());
 
-      if(fileName == 'directoryPathHere/hello.txt') {
+      if(fileName == path.join('directoryPathHere','hello.txt')) {
         callback(undefined, 'hello');
-      } else if(fileName == 'directoryPathHere/world.txt') {
+      } else if(fileName == path.join('directoryPathHere','world.txt')) {
         callback(undefined, 'world');
       } else {
         should.fail('Failing test because filename '+fileName+' was not expected');

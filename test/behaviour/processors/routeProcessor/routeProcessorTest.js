@@ -6,14 +6,17 @@ var routeProcessor = require('../../../../modules/processors/routeProcessor.js')
 describe('routeProcessor', function(){
   describe('#process', function() {
 
-    var originalFileComponent;
+    var originalFrom;
+    var originalTo;
 
     beforeEach(function(){
-      originalFileComponent = fileComponent;
+      originalFrom = fileComponent.from;
+      originalTo = fileComponent.to;
     });
 
     afterEach(function(){
-      fileComponent = originalFileComponent;
+      fileComponent.from = originalFrom;
+      fileComponent.to = originalTo;
     });
 
     it('A route with 2 endpoints is successfully processed', function() {

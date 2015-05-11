@@ -4,7 +4,7 @@
   "description": "A camel-like integration framework",
   "main": "index.js",
   "scripts": {
-    "test": "mocha test/behaviour --recursive; mocha test/integration --recursive"
+    "test": "mocha --recursive"
   },
   "repository": {
     "type": "git",
