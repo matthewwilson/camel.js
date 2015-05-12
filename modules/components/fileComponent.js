@@ -61,9 +61,19 @@ exports.from = function(uri, route, callback) {
             if(err) {
               callback(err, route);
             } else {
+
+              var fileCount = 1;
+
               files.forEach(function (file) {
                 route.message.headers.filePath = file;
-                readFile(p.join(path, file), route.clone(), callback);
+
+                if(fileCount == files.length) {
+                  readFile(p.join(path, file), route, callback);
+                } else {
+                  readFile(p.join(path, file), route.clone(), callback);
+                  fileCount++;
+                }
+
               });
             }
 

@@ -19,6 +19,7 @@ describe('Simple Route Test', function() {
 
     var context = new camel.context();
     var route = new camel.route();
+    route.id = Math.floor((Math.random() * 1000000) + 1);
     route.from('file://test/integration/source.txt').to('file://test/integration/destination.txt');
     context.addRoute(route);
 

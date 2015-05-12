@@ -210,7 +210,7 @@ exports.describe = function() {
         newRoute.queue.length.should.equal(2);
         newRoute.hasStarted.should.be.false;
         (newRoute.body === undefined).should.be.true;
-        (newRoute.id === undefined).should.be.true;
+        (newRoute.id === undefined).should.be.false;
 
 
       });

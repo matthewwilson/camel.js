@@ -1,4 +1,5 @@
 var fileComponent = require('../components/fileComponent.js');
+var cloneTracker = require('../cloneHelper/cloneTracker');
 
 var camelCallback;
 
@@ -29,9 +30,15 @@ var processFunction = function(err, route) {
       } else {
         throw new Error("Endpoint "+currentEndpoint+" is not supported");
       }
+
     } else {
-      //all done
-      camelCallBack(undefined);
+
+      cloneTracker.finishRoute(route.id);
+
+      if(cloneTracker.allClonesFinished(route.id)) {
+        camelCallBack(undefined);
+      }
+
     }
   }
 

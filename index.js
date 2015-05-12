@@ -1,18 +1,21 @@
 var routeProcessor = require('./modules/processors/routeProcessor.js');
 var message = require('./modules/message.js');
-var clone = require('clone');
+var cloner = require('clone');
+var cloneTracker = require('./modules/cloneHelper/cloneTracker.js');
 
 exports.context = function context() {
 
   this.routes = [];
 
   this.addRoute = function(route) {
+    route.context = this;
     this.routes.push(route);
   };
 
   this.start = function(callback) {
 
     this.routes.forEach(function(route) {
+      cloneTracker.addParent(route.id);
       routeProcessor.process(route, callback);
     });
 
@@ -64,8 +67,14 @@ exports.route = function route() {
   };
 
   this.clone = function() {
-    console.log('cloning route');
-    return clone(this);
+    var clone = cloner(this);
+
+    clone.id = Math.floor((Math.random() * 1000000) + 1);
+
+    cloneTracker.addClone(this.id, clone.id);
+
+    return clone;
+
   };
 
 

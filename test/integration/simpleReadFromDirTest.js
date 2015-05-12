@@ -69,11 +69,9 @@ describe('Simple Read From Dir Test', function() {
 
     var context = new camel.context();
     var route = new camel.route();
+    route.id = Math.floor((Math.random() * 1000000) + 1);
     route.from('file://test/integration/sourceFiles').to('file://test/integration/destinationFiles');
     context.addRoute(route);
-
-    var expectedRoutes = 5;
-    var finishedRoutes = 0;
 
     context.start(function(err) {
 
@@ -81,23 +79,16 @@ describe('Simple Read From Dir Test', function() {
         done(err);
       }
 
-      finishedRoutes++;
+      fs.readdir(path.join('test','integration','destinationFiles'), function(err, files) {
 
-      if(finishedRoutes == expectedRoutes) {
+        if(err) {
+          done(err);
+        }
 
-        console.log('dir callback');
+        files.length.should.equal(5);
+        done();
 
-        fs.readdir(path.join('test','integration','destinationFiles'), function(err, files) {
-
-          if(err) {
-            done(err);
-          }
-
-          files.length.should.equal(5);
-          done();
-
-        });
-      }
+      });
 
     });
 
