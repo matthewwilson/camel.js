@@ -81,20 +81,47 @@ exports.from = function(uri, route, callback) {
 
 exports.to = function(uri, route, callback) {
 
-  var fileName = stripUriScheme(uri);
+  var path = stripUriScheme(uri);
 
-  if(!fileName) {
-    callback(new Error('No fileName found in endpoint: '+uri), route);
+  if(!path) {
+    callback(new Error('No path found in endpoint: '+uri), route);
   } else if(route.message === undefined || route.message.body === undefined) {
     callback(new Error("The body cannot be empty when writing to file"), route);
   } else {
 
-    fs.writeFile(fileName, route.message.body, function(err) {
+    fs.access(path, function(err) {
+
       if(err) {
-        callback(err, route);
+        writeFile(path, route, callback);
       } else {
-        callback(undefined, route);
+
+        fs.stat(path, function(err, stats) {
+
+          if(err) {
+            callback(err, route);
+          } else {
+
+            if(stats.isDirectory()) {
+              writeFile(p.join(path, route.message.headers.filePath), route, callback);
+            } else {
+              writeFile(path, route, callback);
+            }
+          }
+
+        });
       }
+
     });
+
   }
+};
+
+var writeFile = function(filePath, route, callback) {
+  fs.writeFile(filePath, route.message.body, function(err) {
+    if(err) {
+      callback(err, route);
+    } else {
+      callback(undefined, route);
+    }
+  });
 };

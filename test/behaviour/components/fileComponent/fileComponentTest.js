@@ -9,13 +9,15 @@ describe('fileComponent', function() {
   var originalReadFile;
   var originalWriteFile;
   var originalStat;
-  var originalReaddir
+  var originalReaddir;
+  var originalAccess;
 
   beforeEach(function(){
     originalReadFile = fs.readFile;
     originalWriteFile = fs.writeFile;
     originalStat = fs.stat;
     originalReaddir = fs.readdir;
+    originalAccess = fs.access;
 
     fs.stat = function (path, callback) {
 
@@ -28,13 +30,20 @@ describe('fileComponent', function() {
 
     };
 
+    fs.access = function (path, callback) {
+
+      callback(undefined);
+
+    };
+
   });
 
   afterEach(function(){
-    fs.readFile = originalReadFile
+    fs.readFile = originalReadFile;
     fs.writeFile = originalWriteFile;
     fs.stat = originalStat;
     fs.readdir = originalReaddir;
+    fs.access = originalAccess;
   });
 
   describe('#from', function() {

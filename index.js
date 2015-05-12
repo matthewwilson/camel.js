@@ -64,6 +64,7 @@ exports.route = function route() {
   };
 
   this.clone = function() {
+    console.log('cloning route');
     return clone(this);
   };
 

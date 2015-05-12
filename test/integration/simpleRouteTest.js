@@ -28,7 +28,7 @@ describe('Simple Route Test', function() {
         done(err);
       }
 
-      fs.readFile('test/integration/destination.txt', function(err, data) {
+      fs.readFile(path.join('test', 'integration', 'destination.txt'), function(err, data) {
 
         if(err) {
           done(err);

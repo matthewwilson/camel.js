@@ -2,6 +2,7 @@ var should = require('chai').should();
 var fileComponent = require('../../../../modules/components/fileComponent.js');
 var camel = require('../../../../index.js');
 var fs = require('fs');
+var path = require('path');
 
 exports.describe = function() {
 
@@ -78,12 +79,50 @@ exports.describe = function() {
 
     fileComponent.to("file://", route, function (err, route) {
       err.should.not.be.undefined;
-      err.message.should.equal('No fileName found in endpoint: file://');
+      err.message.should.equal('No path found in endpoint: file://');
 
       route.should.not.be.undefined;
       route.getNextEndpoint().should.equal('file://destination.txt');
     });
 
+
+  });
+
+  it('writes file to a directory if no filefilter is specified', function() {
+
+    fs.stat = function (path, callback) {
+
+      var stats = {};
+
+      stats.isDirectory = function () {
+        return true;
+      };
+
+      callback(undefined, stats);
+
+    };
+
+    fs.writeFile = function (fileName, body, callback) {
+      fileName.should.be.a('string');
+      fileName.should.equal(path.join('destinationFiles', 'source.txt'));
+
+      body.toString().should.equal('Hello World');
+
+      callback(undefined);
+    };
+
+    var route = new camel.route();
+    route.from('file://sourceFiles').to('file://destinationFiles');
+    route.getNextEndpoint();
+
+    route.message.headers.filePath = "source.txt";
+    route.message.body = new Buffer("Hello World");
+
+    fileComponent.to(route.getNextEndpoint(), route, function (err, route) {
+
+      route.queue.length.should.equal(0);
+
+    });
 
   });
 
