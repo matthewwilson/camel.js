@@ -4,6 +4,10 @@ module.exports = function () {
   this.clones = [];
   this.finished = false;
 
+  this.getClones = function() {
+    return this.clones;
+  };
+
   this.addClone = function(clone) {
     this.clones.push(clone);
   };
