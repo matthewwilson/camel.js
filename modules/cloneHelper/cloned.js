@@ -18,65 +18,74 @@ module.exports = function () {
 
   this.clonesFinished = function() {
 
-    var allClonesFinished = true;
+    for(var i = 0; i < this.clones.length; i++) {
 
-    this.clones.forEach(function(clone) {
-      if(clone.hasFinished() === false) {
-        allClonesFinished = false;
-        return;
+      var clone = this.clones[i];
+
+      if(!clone.hasFinished()) {
+        return false;
       }
-    });
+    }
 
-    return allClonesFinished;
+    return true;
 
   };
 
   this.hasClone = function(id) {
-    var foundClone = false;
 
-    this.clones.forEach(function(clone) {
-      if(clone.routeId == id) {
-        foundClone = true;
-        return;
-      } else if(clone.hasClone(id)) {
-        foundClone = true;
-        return;
+    for(var i = 0; i < this.clones.length; i++) {
+
+      var clone = this.clones[i];
+
+      if(clone.routeId == id || clone.hasClone(id)) {
+        return true;
       }
-    });
+    }
 
-    return foundClone;
+    return false;
+
   };
 
   this.getClone = function(id) {
 
-    var foundClone;
+    for(var i = 0; i < this.clones.length; i++) {
 
-    this.clones.forEach(function(clone) {
+      var clone = this.clones[i];
+
       if(clone.routeId == id) {
-        foundClone = clone;
-        return;
+        return clone;
       } else if(clone.hasClone(id)) {
-
-        foundClone = clone.getClone(id);
-        return;
+        return clone.getClone(id);
       }
-    });
-
-    return foundClone;
+    }
 
   };
 
   this.finishClone = function(id) {
-    this.clones.forEach(function(clone) {
+
+    var result = this.finish(id);
+
+    if(!result) {
+      throw new Error('Couldnt find clone to finish');
+    }
+
+  };
+
+  this.finish = function(id) {
+
+    for(var i = 0; i < this.clones.length; i++) {
+
+      var clone = this.clones[i];
 
       if(clone.routeId == id) {
         clone.finished = true;
-        return;
-      } else {
-        clone.finishClone(id);
+        return true;
+      } else if(clone.finish(id)){
+        return true;
       }
+    }
 
-    });
+    return false;
   };
 
 

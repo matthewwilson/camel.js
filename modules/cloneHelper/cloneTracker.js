@@ -13,55 +13,60 @@ exports.addParent = function(parentRouteId) {
 
 exports.addClone = function(parentRouteId, cloneRouteId) {
 
-  routes.forEach(function(route) {
+  for(var i = 0; i < routes.length; i++) {
+
+    var route = routes[i];
 
     if(route.routeId == parentRouteId) {
       var clone = new cloned();
       clone.routeId = cloneRouteId;
 
       route.addClone(clone);
-      return;
+      break;
+
     } else if(route.hasClone(parentRouteId)) {
 
       var clone = new cloned();
       clone.routeId = cloneRouteId;
 
       route.getClone(parentRouteId).addClone(clone);
-      return;
+      break;
+
     }
 
-  });
+  }
 
 };
 
 exports.finishRoute = function(routeId) {
-  routes.forEach(function(route) {
+
+  for(var i = 0; i < routes.length; i++) {
+
+    var route = routes[i];
 
     if(route.routeId == routeId) {
       route.finished = true;
-      return;
+      break;
     } else if(route.hasClone(routeId)) {
       route.finishClone(routeId);
-      return;
+      break;
     }
+  }
 
-  });
 };
 
 exports.allClonesFinished = function(routeId) {
 
-  var finished = false;
+  for(var i = 0; i < routes.length; i++) {
 
-  routes.forEach(function(route) {
+    var route = routes[i];
 
     if(route.routeId == routeId || route.hasClone(routeId)) {
-      finished = route.hasFinished();
-      return;
+      return(route.hasFinished());
     }
+  }
 
-  });
-
-  return finished;
+  return false;
 };
 
 exports.clear = function() {
