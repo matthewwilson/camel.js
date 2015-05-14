@@ -21,9 +21,7 @@
   "homepage": "https://github.com/matthewcodes/camel.js",
   "devDependencies": {
     "chai": "^2.2.0",
-    "mocha": "^2.2.4",
-    "codecov.io": "^0.1.2",
-    "istanbul": "^0.3.14"
+    "mocha": "^2.2.4"
   },
   "dependencies": {
     "clone": "^1.0.2"
