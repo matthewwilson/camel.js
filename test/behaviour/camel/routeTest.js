@@ -1,5 +1,6 @@
 var camel = require('../../../index.js');
 var should = require('chai').should();
+var cloneTracker = require('../../../modules/cloneHelper/cloneTracker.js');
 
 exports.describe = function() {
 
@@ -195,6 +196,8 @@ exports.describe = function() {
       it('makes a copy of the route', function () {
 
         var route = new camel.route();
+        route.id = "some id";
+        cloneTracker.addParent(route.id);
 
         route.from('file://hello.world').to('file://destination.txt');
 
@@ -203,7 +206,6 @@ exports.describe = function() {
         route.getNextEndpoint().should.equal('file://hello.world');
         route.hasStarted = true;
         route.body = "hello world";
-        route.id = "some id";
 
         route.queue.length.should.equal(1);
 

@@ -2,6 +2,10 @@ var cloned = require('./cloned.js');
 
 var routes = [];
 
+exports.getRoutes = function() {
+  return routes;
+};
+
 exports.addParent = function(parentRouteId) {
 
   var parent = new cloned();
@@ -13,6 +17,8 @@ exports.addParent = function(parentRouteId) {
 
 exports.addClone = function(parentRouteId, cloneRouteId) {
 
+  var added = false;
+
   for(var i = 0; i < routes.length; i++) {
 
     var route = routes[i];
@@ -22,6 +28,7 @@ exports.addClone = function(parentRouteId, cloneRouteId) {
       clone.routeId = cloneRouteId;
 
       route.addClone(clone);
+      added = true;
       break;
 
     } else if(route.hasClone(parentRouteId)) {
@@ -30,15 +37,22 @@ exports.addClone = function(parentRouteId, cloneRouteId) {
       clone.routeId = cloneRouteId;
 
       route.getClone(parentRouteId).addClone(clone);
+      added = true;
       break;
 
     }
 
   }
 
+  if(!added) {
+    throw new Error('Unable to add clone, perhaps the parent doesnt exist');
+  }
+
 };
 
 exports.finishRoute = function(routeId) {
+
+  var finishedSomething = false;
 
   for(var i = 0; i < routes.length; i++) {
 
@@ -46,11 +60,17 @@ exports.finishRoute = function(routeId) {
 
     if(route.routeId == routeId) {
       route.finished = true;
+      finishedSomething = true;
       break;
     } else if(route.hasClone(routeId)) {
       route.finishClone(routeId);
+      finishedSomething = true;
       break;
     }
+  }
+
+  if(!finishedSomething) {
+    throw new Error('Unable to find route to finish with id: '+routeId);
   }
 
 };

@@ -1,5 +1,6 @@
 var should = require('chai').should();
 var fileComponent = require('../../../../modules/components/fileComponent.js');
+var cloneTracker = require('../../../../modules/cloneHelper/cloneTracker.js');
 var camel = require('../../../../index.js');
 var path = require('path');
 var fs = require('fs');
@@ -204,6 +205,8 @@ exports.describe = function() {
     var expectedFilePathHeaders = ['hello.txt', 'world.txt'];
 
     var camelroute = new camel.route();
+    camelroute.id = "camelroute some id";
+    cloneTracker.addParent(camelroute.id);
 
     camelroute.from('file://directoryPathHere').to('file://hello.txt');
 

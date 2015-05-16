@@ -15,6 +15,11 @@ exports.context = function context() {
   this.start = function(callback) {
 
     this.routes.forEach(function(route) {
+
+      if(route.id === undefined) {
+        route.id = Math.floor((Math.random() * 1000000) + 1);
+      }
+
       cloneTracker.addParent(route.id);
       routeProcessor.process(route, callback);
     });
@@ -67,9 +72,10 @@ exports.route = function route() {
   };
 
   this.clone = function() {
+
     var clone = cloner(this);
 
-    clone.id = Math.floor((Math.random() * 1000000) + 1);
+    clone.id = this.id + '_' + Math.floor((Math.random() * 1000000) + 1);
 
     cloneTracker.addClone(this.id, clone.id);
 

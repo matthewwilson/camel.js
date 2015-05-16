@@ -1,6 +1,7 @@
 var should = require('chai').should();
 var fileComponent = require('../../../../modules/components/fileComponent.js');
 var camel = require('../../../../index.js');
+var cloneTracker = require('../../../../modules/cloneHelper/cloneTracker.js');
 var routeProcessor = require('../../../../modules/processors/routeProcessor.js');
 
 describe('routeProcessor', function(){
@@ -46,6 +47,10 @@ describe('routeProcessor', function(){
       };
 
       var route = new camel.route();
+      route.id = '1234-route';
+
+      cloneTracker.addParent(route.id);
+
       route.from('file://source.txt')
            .to('file://destination.txt');
 
@@ -84,6 +89,10 @@ describe('routeProcessor', function(){
       };
 
       var route = new camel.route();
+
+      route.id = '4-to';
+      cloneTracker.addParent(route.id);
+
       route.from('file://source.txt')
            .to('file://destination.txt')
            .to('file://destination2.txt')
