@@ -63,6 +63,8 @@ To read all files in a directory - `from('file://directoryNameHere')`
 
 To write to a file, replacing all contents with the routes body - `to('file://source.txt')`
 
+To write to a directory - `to('file://directoryName')`
+
 ##Camel.js Development
 
 ###Running tests
