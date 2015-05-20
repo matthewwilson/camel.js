@@ -31,4 +31,30 @@ describe('endpoint', function() {
 
   });
 
+  describe('#options', function() {
+
+    it('returns the options of the query string', function() {
+
+      var validFileEndpoint = new endpoint("file://source.txt?fileFilter=*.txt");
+
+      validFileEndpoint.options.fileFilter.should.equal('*.txt');
+      validFileEndpoint.hostname.should.equal('source.txt');
+
+    });
+
+    it('returns empty object if there is no query string', function() {
+
+      var validFileEndpoint = new endpoint("file://source.txt");
+
+      isEmptyObject(validFileEndpoint.options).should.be.true;
+      validFileEndpoint.hostname.should.equal('source.txt');
+
+    });
+
+  });
+
+  function isEmptyObject(obj) {
+    return !Object.keys(obj).length;
+  }
+
 });
