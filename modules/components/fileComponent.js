@@ -2,8 +2,9 @@ var fs = require('fs');
 var p = require('path');
 
 var isFileEndpoint = function(uri) {
+
   if(uri) {
-    return (uri.indexOf('file://') === 0);
+    return (uri.protocol === 'file:');
   }
 
   return false;
@@ -11,16 +12,6 @@ var isFileEndpoint = function(uri) {
 };
 
 exports.isFileEndpoint = isFileEndpoint;
-
-var stripUriScheme = function(uri) {
-  if(uri.indexOf('file://') === 0) {
-    return uri.replace('file://','');
-  }
-
-  return uri;
-};
-
-exports.stripUriScheme = stripUriScheme;
 
 var readFile = function(path, route, callback) {
 
@@ -40,10 +31,10 @@ var readFile = function(path, route, callback) {
 
 exports.from = function(uri, route, callback) {
 
-  var path = stripUriScheme(uri);
+  var path = uri.hostname;
 
   if(!path) {
-    callback(new Error('No path found in endpoint: '+uri), route);
+    callback(new Error('No path found in endpoint: '+uri.href), route);
   } else {
 
     route.message.headers.filePath = path;
@@ -91,10 +82,10 @@ exports.from = function(uri, route, callback) {
 
 exports.to = function(uri, route, callback) {
 
-  var path = stripUriScheme(uri);
+  var path = uri.hostname;
 
   if(!path) {
-    callback(new Error('No path found in endpoint: '+uri), route);
+    callback(new Error('No path found in endpoint: '+uri.href), route);
   } else if(route.message === undefined || route.message.body === undefined) {
     callback(new Error("The body cannot be empty when writing to file"), route);
   } else {

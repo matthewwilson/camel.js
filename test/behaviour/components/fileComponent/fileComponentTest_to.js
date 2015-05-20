@@ -3,6 +3,7 @@ var fileComponent = require('../../../../modules/components/fileComponent.js');
 var camel = require('../../../../index.js');
 var fs = require('fs');
 var path = require('path');
+var endpoint = require('../../../../modules/endpoint.js');
 
 exports.describe = function() {
 
@@ -20,7 +21,7 @@ exports.describe = function() {
     var route = new camel.route();
     route.message.body = new Buffer('Here is the content');
 
-    fileComponent.to("file://destination.txt", route, function (err, route) {
+    fileComponent.to(new endpoint("file://destination.txt"), route, function (err, route) {
 
       (err === undefined).should.be.true;
 
@@ -34,7 +35,7 @@ exports.describe = function() {
 
     var route = new camel.route();
 
-    fileComponent.to("file://destination.txt", route, function (err, route) {
+    fileComponent.to(new endpoint("file://destination.txt"), route, function (err, route) {
 
       err.should.not.be.undefined;
       err.message.should.equal('The body cannot be empty when writing to file');
@@ -58,7 +59,7 @@ exports.describe = function() {
     var route = new camel.route();
     route.message.body = new Buffer('Here is the content');
 
-    fileComponent.to("file://destination.txt", route, function (err, route) {
+    fileComponent.to(new endpoint("file://destination.txt"), route, function (err, route) {
 
       err.should.not.be.undefined;
       err.message.should.equal('Unable to write to file');
@@ -77,12 +78,12 @@ exports.describe = function() {
 
     route.message.body = new Buffer("Hello World");
 
-    fileComponent.to("file://", route, function (err, route) {
+    fileComponent.to(new endpoint("file://"), route, function (err, route) {
       err.should.not.be.undefined;
       err.message.should.equal('No path found in endpoint: file://');
 
       route.should.not.be.undefined;
-      route.getNextEndpoint().should.equal('file://destination.txt');
+      route.getNextEndpoint().href.should.equal('file://destination.txt');
     });
 
 

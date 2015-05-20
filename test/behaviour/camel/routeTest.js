@@ -16,7 +16,7 @@ exports.describe = function() {
 
         myself.should.equal(route);
 
-        route.getNextEndpoint().should.equal('file://source.txt');
+        route.getNextEndpoint().href.should.equal('file://source.txt');
 
       });
 
@@ -85,9 +85,9 @@ exports.describe = function() {
 
         myself.should.equal(route);
 
-        route.getNextEndpoint().should.equal('file://source.txt');
-        route.getNextEndpoint().should.equal('file://destination.txt');
-        route.getNextEndpoint().should.equal('file://anotherDestination.txt');
+        route.getNextEndpoint().href.should.equal('file://source.txt');
+        route.getNextEndpoint().href.should.equal('file://destination.txt');
+        route.getNextEndpoint().href.should.equal('file://anotherDestination.txt');
 
       });
 
@@ -160,8 +160,8 @@ exports.describe = function() {
 
         route.queue.length.should.equal(2);
 
-        route.getNextEndpoint().should.equal('http://www.mwil.so');
-        route.getNextEndpoint().should.equal('file://hello.txt');
+        route.getNextEndpoint().href.should.equal('http://www.mwil.so');
+        route.getNextEndpoint().href.should.equal('file://hello.txt');
 
         route.queue.length.should.equal(0);
 
@@ -179,11 +179,11 @@ exports.describe = function() {
 
         route.queue.length.should.equal(2);
 
-        route.getNextEndpoint().should.equal('http://www.mwil.so');
+        route.getNextEndpoint().href.should.equal('http://www.mwil.so');
 
         route.queue.length.should.equal(1);
 
-        route.getNextEndpoint().should.equal('file://hello.txt');
+        route.getNextEndpoint().href.should.equal('file://hello.txt');
 
         route.queue.length.should.equal(0);
 
@@ -203,7 +203,7 @@ exports.describe = function() {
 
         var newRoute = route.clone();
 
-        route.getNextEndpoint().should.equal('file://hello.world');
+        route.getNextEndpoint().href.should.equal('file://hello.world');
         route.hasStarted = true;
         route.body = "hello world";
 

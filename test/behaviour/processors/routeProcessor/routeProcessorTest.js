@@ -24,7 +24,7 @@ describe('routeProcessor', function(){
 
       fileComponent.from = function (endpoint, route, callback) {
 
-        endpoint.should.equal('file://source.txt');
+        endpoint.href.should.equal('file://source.txt');
 
         route.body = new Buffer('hello world');
 
@@ -36,7 +36,7 @@ describe('routeProcessor', function(){
 
       fileComponent.to = function (endpoint, route, callback) {
 
-        endpoint.should.equal('file://destination.txt');
+        endpoint.href.should.equal('file://destination.txt');
 
         route.body.toString().should.equal('hello world');
 
@@ -64,7 +64,7 @@ describe('routeProcessor', function(){
 
       fileComponent.from = function (endpoint, route, callback) {
 
-        endpoint.should.equal('file://source.txt');
+        endpoint.href.should.equal('file://source.txt');
 
         route.body = new Buffer('hello world');
 
@@ -78,7 +78,7 @@ describe('routeProcessor', function(){
 
       fileComponent.to = function (endpoint, route, callback) {
 
-        endpoint.should.equal(expectedEndpointNames.shift());
+        endpoint.href.should.equal(expectedEndpointNames.shift());
 
         route.body.toString().should.equal('hello world');
 
@@ -112,7 +112,7 @@ describe('routeProcessor', function(){
 
       fileComponent.from = function (endpoint, route, callback) {
 
-        endpoint.should.equal('file://source.txt');
+        endpoint.href.should.equal('file://source.txt');
 
         route.hasStarted.should.equal(true);
 
@@ -144,7 +144,7 @@ describe('routeProcessor', function(){
 
       fileComponent.from = function (endpoint, route, callback) {
 
-        endpoint.should.equal('file://source.txt');
+        endpoint.href.should.equal('file://source.txt');
 
         route.body = new Buffer("Body loaded from file");
 
@@ -163,12 +163,12 @@ describe('routeProcessor', function(){
         var expectedEndpointName = expectedEndpointNames.shift();
 
         if(expectedEndpointName) {
-          endpoint.should.equal(expectedEndpointName);
+          endpoint.href.should.equal(expectedEndpointName);
         } else {
           should.fail('The to function should not be called for the last endpoint');
         }
 
-        if(endpoint == "file://destination2.txt") {
+        if(endpoint.href == "file://destination2.txt") {
           callback(error, route);
         } else {
           callback(null, route);

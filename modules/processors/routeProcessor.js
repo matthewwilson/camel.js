@@ -28,7 +28,7 @@ var processFunction = function(err, route) {
         }
 
       } else {
-        throw new Error("Endpoint "+currentEndpoint+" is not supported");
+        throw new Error("Endpoint "+currentEndpoint.href+" is not supported");
       }
 
     } else {

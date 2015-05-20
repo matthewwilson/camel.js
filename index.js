@@ -2,6 +2,7 @@ var routeProcessor = require('./modules/processors/routeProcessor.js');
 var message = require('./modules/message.js');
 var cloner = require('clone');
 var cloneTracker = require('./modules/cloneHelper/cloneTracker.js');
+var endpoint = require('./modules/endpoint.js');
 
 exports.context = function context() {
 
@@ -45,7 +46,7 @@ exports.route = function route() {
       throw new Error('Endpoint uri is not in the correct format');
     }
 
-    this.addToQueue(uri);
+    this.addToQueue(new endpoint(uri));
     return this;
   };
 
@@ -59,7 +60,7 @@ exports.route = function route() {
       throw new Error('Endpoint uri is not in the correct format');
     }
 
-    this.addToQueue(uri);
+    this.addToQueue(new endpoint(uri));
     return this;
   };
 

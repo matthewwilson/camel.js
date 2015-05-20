@@ -25,7 +25,7 @@ exports.describe = function() {
 
       route.message.headers.filePath.should.equal('source.txt');
       route.message.body.toString().should.equal('Heres the body text laaad!');
-      route.getNextEndpoint().should.equal('file://destination.txt');
+      route.getNextEndpoint().href.should.equal('file://destination.txt');
     });
 
     route.queue.length.should.equal(0);
@@ -49,7 +49,7 @@ exports.describe = function() {
 
       route.message.headers.filePath.should.equal('source.txt');
       (route.body === undefined).should.be.true;
-      route.getNextEndpoint().should.equal('file://destination.txt');
+      route.getNextEndpoint().href.should.equal('file://destination.txt');
 
     });
 
@@ -82,12 +82,12 @@ exports.describe = function() {
     route.from("file://source.txt").to('file://destination.txt');
     route.getNextEndpoint();
 
-    fileComponent.from("file://", route, function (err, route) {
+    fileComponent.from({'href': "file://"}, route, function (err, route) {
       err.should.not.be.undefined;
       err.message.should.equal('No path found in endpoint: file://');
 
       route.should.not.be.undefined;
-      route.getNextEndpoint().should.equal('file://destination.txt');
+      route.getNextEndpoint().href.should.equal('file://destination.txt');
     });
 
     route.queue.length.should.equal(0);
@@ -110,7 +110,7 @@ exports.describe = function() {
 
       route.should.not.be.undefined;
       route.message.headers.filePath.should.equal('source.txt');
-      route.getNextEndpoint().should.equal('file://destination.txt');
+      route.getNextEndpoint().href.should.equal('file://destination.txt');
     });
 
     route.queue.length.should.equal(0);
@@ -142,7 +142,7 @@ exports.describe = function() {
 
       route.should.not.be.undefined;
       route.message.headers.filePath.should.equal('source.txt');
-      route.getNextEndpoint().should.equal('file://destination.txt');
+      route.getNextEndpoint().href.should.equal('file://destination.txt');
     });
 
     route.queue.length.should.equal(0);
@@ -214,7 +214,7 @@ exports.describe = function() {
 
       route.message.headers.filePath.should.equal(expectedFilePathHeaders.shift());
       route.message.body.should.equal(expectedBodies.shift());
-      route.getNextEndpoint().should.equal('file://hello.txt');
+      route.getNextEndpoint().href.should.equal('file://hello.txt');
 
     });
 
