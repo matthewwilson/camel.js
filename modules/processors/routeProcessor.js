@@ -3,7 +3,7 @@ var cloneTracker = require('../cloneHelper/cloneTracker');
 
 var camelCallback;
 
-var processFunction = function(err, route) {
+function processFunction(err, route) {
 
   if(err) {
     camelCallBack(err);
@@ -42,7 +42,7 @@ var processFunction = function(err, route) {
     }
   }
 
-};
+}
 
 exports.process = function (route, callback) {
   camelCallBack = callback;

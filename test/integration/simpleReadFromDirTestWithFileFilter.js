@@ -14,11 +14,11 @@ describe('Simple Read From Dir Test', function() {
 
           if(err) { done(err); }
 
-          fs.writeFile(path.join('test','integration','sourceFiles','source2.txt'), "Hey there! source2", function(err) {
+          fs.writeFile(path.join('test','integration','sourceFiles','source2.tmp'), "Hey there!", function(err) {
 
             if(err) { done(err); }
 
-            fs.writeFile(path.join('test','integration','sourceFiles','source3.txt'), "Hey there! source3", function(err) {
+            fs.writeFile(path.join('test','integration','sourceFiles','source3.html'), "Hey there!", function(err) {
 
               if(err) { done(err); }
 
@@ -65,12 +65,12 @@ describe('Simple Read From Dir Test', function() {
     }
   };
 
-  it('Copies the files in source files to destinationFiles', function(done) {
+  it('Copies the .txt files in source files to destinationFiles', function(done) {
 
     var context = new camel.context();
     var route = new camel.route();
     route.id = Math.floor((Math.random() * 1000000) + 1);
-    route.from('file://test/integration/sourceFiles').to('file://test/integration/destinationFiles');
+    route.from('file://test/integration/sourceFiles?fileFilter=*.txt').to('file://test/integration/destinationFiles');
     context.addRoute(route);
 
     context.start(function(err) {
@@ -85,8 +85,8 @@ describe('Simple Read From Dir Test', function() {
           done(err);
         }
 
-        files.length.should.equal(5);
-
+        files.length.should.equal(3);
+        
         for(i = 0; i<files.length; i++) {
 
           var fileName = files[i];
@@ -95,7 +95,6 @@ describe('Simple Read From Dir Test', function() {
           contents.should.equal("Hey there! "+fileName.replace(".txt",""));
 
         }
-
 
         done();
 

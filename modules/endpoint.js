@@ -15,6 +15,10 @@ module.exports = function(uri) {
     return uri;
   };
 
+  this.hasOptions = function() {
+    return Object.keys(this.options).length;
+  };
+
   this.href = uri;
   this.endpoint = url.parse(uri,true);
   this.protocol = this.endpoint.protocol;

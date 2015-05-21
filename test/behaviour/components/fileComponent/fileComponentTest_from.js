@@ -222,4 +222,77 @@ exports.describe = function() {
 
   });
 
+  it('processes all files in a directory with the matching fileFilter option', function() {
+
+
+    fs.stat = function (path, callback) {
+
+      var stats = {};
+
+      if(path == 'directoryPathHere') {
+
+        stats.isDirectory = function () {
+          return true;
+        };
+
+      } else if(path == 'hello.txt') {
+
+        stats.isDirectory = function () {
+          return false;
+        };
+
+      } else {
+        should.fail('Failing test because path '+path+' was not expected');
+      }
+
+      callback(undefined, stats);
+
+    };
+
+    var expectedFileNames = [path.join('directoryPathHere','hello.txt'), path.join('directoryPathHere','world.txt')];
+
+    fs.readFile = function (fileName, callback) {
+      fileName.should.be.a('string');
+      fileName.should.equal(expectedFileNames.shift());
+
+      if(fileName == path.join('directoryPathHere','hello.txt')) {
+        callback(undefined, 'hello');
+      } else if(fileName == path.join('directoryPathHere','world.txt')) {
+        callback(undefined, 'world');
+      } else {
+        should.fail('Failing test because filename '+fileName+' was not expected');
+      }
+    };
+
+    fs.readdir = function (path, callback) {
+
+      if(path == 'directoryPathHere') {
+        callback(undefined, ['hello.txt', 'index.html', 'world.txt']);
+      } else {
+        should.fail('Failing test because path '+path+' was not expected');
+      }
+
+    };
+
+    var expectedBodies = ['hello', 'world'];
+    var expectedFilePathHeaders = ['hello.txt', 'world.txt'];
+
+    var camelroute = new camel.route();
+    camelroute.id = "camelroute some id";
+    cloneTracker.addParent(camelroute.id);
+
+    camelroute.from('file://directoryPathHere?fileFilter=*.txt').to('file://hello.txt');
+
+    fileComponent.from(camelroute.getNextEndpoint(), camelroute, function (err, route) {
+
+      route.message.headers.filePath.should.equal(expectedFilePathHeaders.shift());
+      route.message.body.should.equal(expectedBodies.shift());
+      route.getNextEndpoint().href.should.equal('file://hello.txt');
+
+    });
+
+    expectedBodies.length.should.equal(0);
+
+  });
+
 };

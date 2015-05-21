@@ -1,7 +1,8 @@
 var fs = require('fs');
 var p = require('path');
+var minimatch = require("minimatch");
 
-var isFileEndpoint = function(uri) {
+function isFileEndpoint(uri) {
 
   if(uri) {
     return (uri.protocol === 'file:');
@@ -9,11 +10,11 @@ var isFileEndpoint = function(uri) {
 
   return false;
 
-};
+}
 
 exports.isFileEndpoint = isFileEndpoint;
 
-var readFile = function(path, route, callback) {
+function readFile(path, route, callback) {
 
   fs.readFile(path, function (err, data) {
 
@@ -26,7 +27,7 @@ var readFile = function(path, route, callback) {
 
   });
 
-};
+}
 
 
 exports.from = function(uri, route, callback) {
@@ -53,19 +54,19 @@ exports.from = function(uri, route, callback) {
               callback(err, route);
             } else {
 
-              var fileCount = 1;
+              if(!uri.hasOptions()) {
+                processFiles(files, route, path, callback);
+              } else {
 
-              files.forEach(function (file) {
-                route.message.headers.filePath = file;
+                var filesToProcess = files;
 
-                if(fileCount == files.length) {
-                  readFile(p.join(path, file), route, callback);
-                } else {
-                  readFile(p.join(path, file), route.clone(), callback);
-                  fileCount++;
+                if(uri.options.fileFilter) {
+                  filesToProcess = files.filter(minimatch.filter(uri.options.fileFilter, {matchBase:true}));
                 }
 
-              });
+                processFiles(filesToProcess, route, path, callback);
+              }
+
             }
 
           });
@@ -79,6 +80,21 @@ exports.from = function(uri, route, callback) {
 
   }
 };
+
+function processFiles(files, route, path, callback) {
+  var fileCount = 1;
+  files.forEach(function (file) {
+    route.message.headers.filePath = file;
+
+    if(fileCount == files.length) {
+      readFile(p.join(path, file), route, callback);
+    } else {
+      readFile(p.join(path, file), route.clone(), callback);
+      fileCount++;
+    }
+
+  });
+}
 
 exports.to = function(uri, route, callback) {
 
@@ -117,7 +133,7 @@ exports.to = function(uri, route, callback) {
   }
 };
 
-var writeFile = function(filePath, route, callback) {
+function writeFile(filePath, route, callback) {
   fs.writeFile(filePath, route.message.body, function(err) {
     if(err) {
       callback(err, route);
@@ -125,4 +141,4 @@ var writeFile = function(filePath, route, callback) {
       callback(undefined, route);
     }
   });
-};
+}
