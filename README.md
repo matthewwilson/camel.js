@@ -61,6 +61,8 @@ To read from a single file - `from('file://source.txt')`
 
 To read all files in a directory - `from('file://directoryNameHere')`
 
+To read all .txt files - `from('file://directoryNameHere?fileFilter=*.txt')`
+
 **Writing files**
 
 To write to a file, replacing all contents with the routes body - `to('file://source.txt')`
