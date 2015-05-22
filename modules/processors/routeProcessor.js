@@ -12,7 +12,7 @@ function processFunction(err, route) {
     } else {
       throw err;
     }
-    
+
   } else {
 
     var currentEndpoint = route.getNextEndpoint();

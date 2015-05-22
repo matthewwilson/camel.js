@@ -62,10 +62,7 @@ describe('watch Dir Test', function() {
       }
     });
 
-    setTimeout(function() {
-        createFiles();
-    }, 3000);
-
+    createFiles();
   });
 
   function createFiles() {
