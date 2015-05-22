@@ -2,6 +2,7 @@ var fs = require('fs');
 var p = require('path');
 var minimatch = require("minimatch");
 var mkdirp = require('mkdirp');
+var watch = require('watch');
 
 function isFileEndpoint(uri) {
 
@@ -18,7 +19,6 @@ exports.isFileEndpoint = isFileEndpoint;
 function readFile(path, route, callback) {
 
   fs.readFile(path, function (err, data) {
-
     if(err) {
       callback(err, route);
     } else {
@@ -69,28 +69,42 @@ function processFromEndpoint(path, uri, route, callback) {
 
       if(stats.isDirectory()) {
 
-        fs.readdir(path, function(err, files) {
+        if(uri.hasOptions() && uri.options.watch) {
 
-          if(err) {
-            callback(err, route);
-          } else {
+          watch.watchTree(path, function (f, curr, prev) {
+            if (typeof f == "object" && prev === null && curr === null) {
+              // Finished walking the tree
+            } else if (prev === null) {
+              var clone = route.clone();
+              clone.message.headers.filePath = p.basename(f);
+              readFile(f, clone, callback);
+            }
+          });
 
-            if(!uri.hasOptions()) {
-              processFiles(files, route, path, callback);
+        } else {
+          fs.readdir(path, function(err, files) {
+
+            if(err) {
+              callback(err, route);
             } else {
 
-              var filesToProcess = files;
+              if(!uri.hasOptions()) {
+                processFiles(files, route, path, callback);
+              } else {
 
-              if(uri.options.fileFilter) {
-                filesToProcess = files.filter(minimatch.filter(uri.options.fileFilter, {matchBase:true}));
+                var filesToProcess = files;
+
+                if(uri.options.fileFilter) {
+                  filesToProcess = files.filter(minimatch.filter(uri.options.fileFilter, {matchBase:true}));
+                }
+
+                processFiles(filesToProcess, route, path, callback);
               }
 
-              processFiles(filesToProcess, route, path, callback);
             }
 
-          }
-
-        });
+          });
+        }
 
       } else {
         readFile(path, route, callback);

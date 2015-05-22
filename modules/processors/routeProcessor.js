@@ -6,7 +6,13 @@ var camelCallback;
 function processFunction(err, route) {
 
   if(err) {
-    camelCallBack(err);
+
+    if(camelCallBack) {
+      camelCallBack(err);
+    } else {
+      throw err;
+    }
+    
   } else {
 
     var currentEndpoint = route.getNextEndpoint();
