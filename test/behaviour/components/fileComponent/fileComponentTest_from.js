@@ -4,6 +4,7 @@ var cloneTracker = require('../../../../modules/cloneHelper/cloneTracker.js');
 var camel = require('../../../../index.js');
 var path = require('path');
 var fs = require('fs');
+var mkdirp = require('mkdirp');
 
 exports.describe = function() {
 

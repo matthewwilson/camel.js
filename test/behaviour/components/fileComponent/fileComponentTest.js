@@ -2,6 +2,7 @@ var fileComponent_from = require('./fileComponentTest_from.js');
 var fileComponent_isFileEndpoint = require('./fileComponentTest_isFileEndpoint.js');
 var fileComponent_to = require('./fileComponentTest_to.js');
 var fs = require('fs');
+var mkdirp = require('mkdirp');
 
 describe('fileComponent', function() {
 
@@ -10,6 +11,7 @@ describe('fileComponent', function() {
   var originalStat;
   var originalReaddir;
   var originalAccess;
+  var originalMkdirp;
 
   beforeEach(function(){
     originalReadFile = fs.readFile;
@@ -17,6 +19,7 @@ describe('fileComponent', function() {
     originalStat = fs.stat;
     originalReaddir = fs.readdir;
     originalAccess = fs.access;
+    originalMkdirp = mkdirp;
 
     fs.stat = function (path, callback) {
 
@@ -43,6 +46,7 @@ describe('fileComponent', function() {
     fs.stat = originalStat;
     fs.readdir = originalReaddir;
     fs.access = originalAccess;
+    mkdirp = originalMkdirp;
   });
 
   describe('#from', function() {
