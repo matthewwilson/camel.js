@@ -4,7 +4,7 @@ var fs = require('fs');
 var path = require('path');
 var watch = require('watch');
 
-describe('watch Dir Test', function() {
+describe('Watch Dir Test', function() {
 
   before(function(done) {
     fs.mkdir(path.join('test','integration','sourceFiles1'), function(err) {

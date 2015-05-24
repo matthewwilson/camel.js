@@ -2,9 +2,8 @@ var should = require('chai').should();
 var camel = require('../../index.js');
 var fs = require('fs');
 var path = require('path');
-var watch = require('watch');
 
-describe('Watch Dir Test with two routes', function() {
+describe('Watch Dir test with existing files', function() {
 
   before(function(done) {
     fs.mkdir(path.join('test','integration','sourceFiles'), function(err) {
@@ -31,11 +30,7 @@ describe('Watch Dir Test with two routes', function() {
 
                   if(err) { done(err); }
 
-                  fs.mkdir(path.join('test','integration','destinationFiles'), function(err) {
-
-                    fs.mkdir(path.join('test','integration','anotherDestinationFiles'), done);
-
-                  });
+                  fs.mkdir(path.join('test','integration','destinationFiles'), done);
 
                 });
 
@@ -49,14 +44,11 @@ describe('Watch Dir Test with two routes', function() {
 
     });
 
-
   });
 
   after(function() {
-    watch.unwatchTree('test/integration/destinationFiles');
     deleteFolderRecursive(path.join('test','integration','sourceFiles'));
     deleteFolderRecursive(path.join('test','integration','destinationFiles'));
-    deleteFolderRecursive(path.join('test','integration','anotherDestinationFiles'));
   });
 
   var deleteFolderRecursive = function(dirPath) {
@@ -73,38 +65,41 @@ describe('Watch Dir Test with two routes', function() {
     }
   };
 
-  it('Waits for files to be copied by one route then copies to a different destination folder', function(done) {
-
-    this.timeout(20000);
+  it('Copies the files in source files to destinationFiles', function(done) {
 
     var context = new camel.context();
     var route = new camel.route();
     route.id = Math.floor((Math.random() * 1000000) + 1);
-    route.from('file://test/integration/sourceFiles').to('file://test/integration/destinationFiles');
+    route.from('file://test/integration/sourceFiles?watch').to('file://test/integration/destinationFiles');
     context.addRoute(route);
-
-    var route2 = new camel.route();
-    route2.id = Math.floor((Math.random() * 1000000) + 1);
-    route2.from('file://test/integration/destinationFiles?watch=true').to('file://test/integration/anotherDestinationFiles');
-    context.addRoute(route2);
 
     context.start(function(err) {
 
-    });
-
-    var count = 0;
-
-    watch.watchTree('test/integration/anotherDestinationFiles', function (f, curr, prev) {
-      if (typeof f == "object" && prev === null && curr === null) {
-        // Finished walking the tree
-      } else if (prev === null) {
-        count++;
-        var contents = fs.readFileSync(f).toString();
-        contents.should.equal("Hey there! "+path.basename(f).replace(".txt",""));
-        if(count == 5) {
-          done();
-        }
+      if(err) {
+        done(err);
       }
+
+      fs.readdir(path.join('test','integration','destinationFiles'), function(err, files) {
+
+        if(err) {
+          done(err);
+        }
+
+        files.length.should.equal(5);
+
+        for(i = 0; i<files.length; i++) {
+
+          var fileName = files[i];
+          var contents = fs.readFileSync(path.join('test','integration','destinationFiles',fileName)).toString();
+
+          contents.should.equal("Hey there! "+fileName.replace(".txt",""));
+
+        }
+
+        done();
+
+      });
+
     });
 
   });
