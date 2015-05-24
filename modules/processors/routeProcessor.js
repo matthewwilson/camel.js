@@ -25,7 +25,11 @@ function processFunction(err, route) {
 
           route.hasStarted = true;
 
-          fileComponent.from(currentEndpoint, route, processFunction);
+          if(currentEndpoint.hasOptions() && currentEndpoint.options.initialDelay) {
+            setTimeout(function(){fileComponent.from(currentEndpoint, route, processFunction);}, currentEndpoint.options.initialDelay);
+          } else {
+            fileComponent.from(currentEndpoint, route, processFunction);
+          }
 
         } else {
 

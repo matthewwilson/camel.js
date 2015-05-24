@@ -20,7 +20,7 @@ describe('routeProcessor', function(){
       fileComponent.to = originalTo;
     });
 
-    it('A route with 2 endpoints is successfully processed', function() {
+    it('processes a route with 2 endpoints', function() {
 
       fileComponent.from = function (endpoint, route, callback) {
 
@@ -56,6 +56,48 @@ describe('routeProcessor', function(){
 
       routeProcessor.process(route, function(err) {
         (err === undefined).should.be.true;
+      });
+
+    });
+
+    it('processes a route with 2 endpoints, after a 2 second delay', function(done) {
+
+      this.timeout(5000);
+
+      fileComponent.from = function (endpoint, route, callback) {
+
+        endpoint.href.should.equal('file://source.txt?initialDelay=2000');
+
+        route.body = new Buffer('hello world');
+
+        route.hasStarted.should.equal(true);
+
+        callback(undefined, route);
+
+      };
+
+      fileComponent.to = function (endpoint, route, callback) {
+
+        endpoint.href.should.equal('file://destination.txt');
+
+        route.body.toString().should.equal('hello world');
+
+        route.hasStarted.should.equal(true);
+
+        callback(undefined, route);
+
+      };
+
+      var route = new camel.route();
+      route.id = '1234-route';
+
+      cloneTracker.addParent(route.id);
+
+      route.from('file://source.txt?initialDelay=2000')
+           .to('file://destination.txt');
+
+      routeProcessor.process(route, function(err) {
+        done(err);
       });
 
     });
